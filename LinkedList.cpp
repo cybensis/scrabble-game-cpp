@@ -17,10 +17,9 @@ int LinkedList::size() {
 
 void LinkedList::clear() {
     Node* curNode = this->head;
-    Node* tmpNode = nullptr;
 
     while (curNode != nullptr) {
-        tmpNode = curNode;
+        Node* tmpNode = curNode;
         curNode = curNode->next;
         delete tmpNode;
     }
@@ -32,7 +31,7 @@ void LinkedList::clear() {
 
 Node* LinkedList::get(int i) {
     Node* newNode = this->head;
-    while (i < this->length && i >= 0) {
+    while (i < this->length && i > 0) {
         newNode = newNode->next;
         i--;
     }
@@ -53,6 +52,7 @@ void LinkedList::addBack(Tile* tile) {
         addFront(tile);
     } else {
         this->tail->next = new Node(new Tile(*tile), nullptr);
+        this->tail = this->tail->next;
         this->length++;
     }
 }
@@ -79,7 +79,7 @@ void LinkedList::deleteBack() {
             // Find the second last node and change its 'next' pointer to null
             Node* prevNode = this->head;
             Node* tmpNode = this->tail;
-            for (int i = 0; i < this->length - 1; i++) { // Iterate to find the second last node
+            while (prevNode->next->next != nullptr) { // Iterate to find the second last node
                 prevNode = prevNode->next;
             }
             prevNode->next = nullptr;
@@ -93,11 +93,38 @@ void LinkedList::deleteBack() {
 }
 
 void LinkedList::addAt(Tile* tile, int i) {
-    // TODO
-//    Node* newNode = new Node(new Tile(*tile), nullptr);
-    this->length++;
+    if (i <= this->length) {
+        if (i == 0) { // if insert at index zero, meaning no there is no node before this node
+            this->head = new Node(new Tile(*tile), this->head);
+        } else { // if insert at index greater than zero, meaning there is/are node(s) before index node
+            // 1. Find node before index node. 2. Create a new node and 'next' pointer points to the
+            // index node. 3. Node before index node 'next' pointer points to new node
+            Node* prevNode = this->head;
+            for (int j = 0; j < i - 1; j++) { // Iterate to find the node before the index node
+                prevNode = prevNode->next;
+            }
+            Node* newNode = new Node(new Tile(*tile), prevNode->next); // Create a new node and 'next' pointer points to index node
+            prevNode->next = newNode; // 'Node before index node' 'next' pointer points to new node
+            this->tail = (newNode->next == nullptr) ? newNode : this->tail;
+        }
+        this->length++;
+    }
 }
 void LinkedList::deleteAt(int i) {
-    // TODO
-    this->length--;
+    // Can only delete a node that is between index 0 and the max index in the linked list
+    if (i < this->length && i >= 0) {
+        if (i == 0) { // if delete at index zero, meaning no there is no node before this node
+            deleteFront();
+        } else { // if delete at index greater than zero, meaning there is/are node(s) before index node
+            Node* prevNode = this->head;
+            for (int j = 0; j < i - 1; j++) { // Iterate to find the node before the index node
+                prevNode = prevNode->next;
+            }
+            Node* dltNode = prevNode->next; // Node to be deleted
+            prevNode->next = prevNode->next->next; // From: previous node -> index node -> following node. To: previous node -> following node.
+            this->tail = (prevNode->next == nullptr) ? prevNode : this->tail;
+            delete dltNode;
+            this->length--;
+        }
+    }
 }
