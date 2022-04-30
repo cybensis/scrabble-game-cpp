@@ -47,6 +47,7 @@ void LinkedList::addFront(Tile* tile) {
     this->length++;
 
 }
+
 void LinkedList::addBack(Tile* tile) {
     if (this->length == 0) {
         addFront(tile);
@@ -93,6 +94,7 @@ void LinkedList::deleteBack() {
 }
 
 void LinkedList::addAt(Tile* tile, int i) {
+    // Can only add a node before the first index (at index 0), all the way, anywhere, till after the last index
     if (i <= this->length) {
         if (i == 0) { // if insert at index zero, meaning no there is no node before this node
             this->head = new Node(new Tile(*tile), this->head);
@@ -110,6 +112,7 @@ void LinkedList::addAt(Tile* tile, int i) {
         this->length++;
     }
 }
+
 void LinkedList::deleteAt(int i) {
     // Can only delete a node that is between index 0 and the max index in the linked list
     if (i < this->length && i >= 0) {
