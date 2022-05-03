@@ -3,10 +3,18 @@
 
 Node::Node(Tile* tile, Node* next)
 {
-   // TODO
+   this->tile = tile;
+   this->next = next;
 }
 
 Node::Node(Node& other)
 {
-   // TODO
+   this->tile = new Tile(*(other.tile));
+   this->next = new Node(*(other.next));
+}
+
+Node::~Node()
+{
+   delete tile;
+   delete next;
 }
