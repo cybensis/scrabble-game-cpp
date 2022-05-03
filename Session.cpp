@@ -4,19 +4,17 @@
 Session::Session() {
     // Need to initialise the tileBag first before creating the players so we can pass tiles to them.
     tileBag = new LinkedList();
-    // Need to pass usernames into the new player objects, use temp names for now
-    playerOne = new Player("NAME1", tileBag);
-    playerOne = new Player("NAME2", tileBag);
-    // This initialises the 2D board vector as a 15x15 array, and all spaces are initialised with a single whitespace
-    board(BOARD_SIZE, std::vector<char>(BOARD_SIZE, ' '));
     playerOnesTurn = true;
     movesThisTurn = 0;
     // This is just for testing until we can get the tile bag going
     char tempChars[24] = {'A','A','B','B','C','C','D','D','E','E','F','F','G','G','H','H','I','I','J','J','K','K','L','L'};
-    for (int i = 24; i < 24; i++) {
+    for (int i = 0; i < 24; i++) {
         Tile tmpTile(tempChars[i], 1);
-        this->tileBag->addFront(tmpTile);
+        this->tileBag->addBack(&tmpTile);
     }
+    // Need to pass usernames into the new player objects, use temp names for now
+    playerOne = new Player("NAME1", tileBag);
+    playerOne = new Player("NAME2", tileBag);
     return;
 }
 
@@ -31,10 +29,10 @@ Session::~Session() {
 Player* Session::getCurrentPlayer() {
     Player* currentPlayer;
     if (playerOnesTurn) {
-        currentPlayer = this->playerOne
+        currentPlayer = this->playerOne;
     }
     else {
-        currentPlayer = this->playerTwo
+        currentPlayer = this->playerTwo;
     }
     return currentPlayer;
 }

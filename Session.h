@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Tile.h"
 #include <vector>
+#include <iostream>
 
 typedef std::vector<std::vector<char>> BoardVector;
 //Maybe make a type def for coordinate pairs
@@ -28,7 +29,8 @@ private:
    Player* playerOne;
    Player* playerTwo;
    LinkedList* tileBag;
-   BoardVector board;
+   // This initialises the 2D board vector as a 15x15 array, and all spaces are initialised with a single whitespace
+   BoardVector board{BOARD_SIZE, std::vector<char>{BOARD_SIZE, ' '}};
    bool playerOnesTurn;
    int movesThisTurn;
 

@@ -8,6 +8,7 @@
 #include "Tile.h"
 #include <string>
 #include <random>
+#include <iostream>
 
 class Player {
 public:
@@ -23,9 +24,7 @@ public:
    void removeTile(Tile* tile);
    // Used by removeTile and replaceTile when looking for a tile that matches the one supplied in the arguments, and returns
    // the index value its first match in the LinkedList
-   int findTile(Tile* tile) {
-
-   }
+   int findTile(Tile* tile);
 
 private:
    LinkedList* playerHand; 
