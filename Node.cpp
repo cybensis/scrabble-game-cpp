@@ -10,11 +10,11 @@ Node::Node(Tile* tile, Node* next)
 Node::Node(Node& other)
 {
    this->tile = new Tile(*(other.tile));
-   this->next = new Node(*(other.next));
+   //this->next = new Node(*(other.next));
 }
 
 Node::~Node()
 {
    delete tile;
-   delete next;
+   //delete next;
 }
