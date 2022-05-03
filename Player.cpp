@@ -16,8 +16,6 @@ Player::Player(std::string playerName, LinkedList* tileBag) {
         // mt() will generate a different random number every time mt() is called, but the number will be something big like
         // 884430747, so to use it to randomly access LinkedList indexes, we take that number and get the remainder of 
         // BIG_NUMBER % TILE_BAG_SIZE, which will always return an element in bounds of the tilebag size.
-
-        std::cout << this->tileBag->size() << std::endl;
         int randomIndex = (mt() % this->tileBag->size());
         // Need to add the tile from the tile bag to the players hand, then remove it from the tile bag
         this->playerHand->addFront(this->tileBag->get(randomIndex)->tile);
