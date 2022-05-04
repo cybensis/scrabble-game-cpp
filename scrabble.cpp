@@ -50,9 +50,10 @@ void mainMenu() {
     cout << "3. Credits (Show student information)" << endl;
     cout << "4. Quit" << endl;
 
-    bool toRePrompt = false;
+    bool toRePrompt;
     string choice;
     do {
+        toRePrompt = false;
         choice = userInput();
         if (choice == "1") {
             newGame();
@@ -111,10 +112,10 @@ void loadGame() {
 
 void credits() {
     std::ifstream f("authors.txt");
-    cout << "----------------------------------" << endl;
+    cout << "\n----------------------------------" << endl;
     if (f.is_open())
-        cout << f.rdbuf() << endl;
-    cout << "----------------------------------" << endl;
+        cout << f.rdbuf();
+    cout << "\n----------------------------------" << endl;
     mainMenu();
 }
 
