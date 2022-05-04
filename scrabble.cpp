@@ -26,9 +26,6 @@ string userInput();
 int main(void) {
    LinkedList* list = new LinkedList();
    delete list;
-   GameEngine* gameInstance = new GameEngine();
-   // Need this so it doesn't have a sook at compile time about gameInstance not being used
-   std::cout << typeid(gameInstance).name() << std::endl;
    std::cout << "TODO: Implement Scrabble!" << std::endl;
    MainMenu();
    return EXIT_SUCCESS;
@@ -46,15 +43,19 @@ void MainMenu() {
     cout << "4. Quit" << endl;
     string choice = userInput();
     if (choice == "1") {
+        cout << " " << endl;
         cout << "Starting a New Game" << endl;
-        cout << " "<<endl;
-        cout << "Enter a name for player 1 (uppercase characters only)" << endl;
-        string name;
-        cout << "> ", cin>> name;
-        cout << "Enter a name for player 2 (uppercase characters only)" << endl;
-        string name2;
-        cout << "> ", cin>> name2;
-        cout << "Let's Play!" << endl;
+        cout << " " << endl;
+        // cout << "Enter a name for player 1 (uppercase characters only)" << endl;
+        // string name;
+        // cout << "> ", cin>> name;
+        // cout << "Enter a name for player 2 (uppercase characters only)" << endl;
+        // string name2;
+        // cout << "> ", cin>> name2;
+        // cout << "Let's Play!" << endl;
+        GameEngine* gameInstance = new GameEngine();
+        // Need this so it doesn't have a sook at compile time about gameInstance not being used
+        std::cout << typeid(gameInstance).name() << std::endl;
 
     }
     if (choice == "2") {
@@ -111,7 +112,8 @@ void MainMenu() {
 string userInput() {
     string input;
     cout << "> ";
-    cin >> input;
+    // cin >> input;
+    std::getline(std::cin, input);
     if (cin.eof() || input == "^D") {
         cout << "\nGoodbye" << endl;
     } else {

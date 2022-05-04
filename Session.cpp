@@ -4,6 +4,11 @@
 Session::Session() {
     playerOnesTurn = true;
     movesThisTurn = 0;
+    // Since you can't declare a 2D vectors size in the header file, it needs to be done here. This loops pushes 15 times,
+    // another vector that has 15 char slots in it, all initialised with an empty space.
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        this->board.push_back(std::vector<char>(BOARD_SIZE, ' '));
+    }
     generateTileBag();
     generatePlayers();
     return;
@@ -63,9 +68,10 @@ void Session::generatePlayers() {
         std::string userInput;
         std::cout << "Enter a name for player " + std::to_string(currentUser) +" (uppercase characters only)" << std::endl << "> "; 
         std::getline(std::cin, userInput);
+        // std::cin >> userInput;
         // Code yoinked from https://stackoverflow.com/questions/48082092/c-check-if-whole-string-is-uppercase
         // This will check if all characters in a string are uppercase characters AND if they are only valid chars (A-Z)
-        if (std::all_of(userInput.begin(), userInput.end(), [](unsigned char c){ return std::isupper(c); })) { 
+        if (std::all_of(userInput.begin(), userInput.end(), [](unsigned char c){ return std::isupper(c); }) && userInput.length() > 0) { 
             // If the currentUser is 1 then create the first player object and add to currentUser, otherwise
             // create playerTwo and end the loop
             if (currentUser == 1) {
@@ -76,6 +82,8 @@ void Session::generatePlayers() {
                 this->playerTwo = new Player(userInput, this->tileBag);
                 inputtingUsernames = false;
             }
+            // Adding an empty line after each input
+            std::cout << std::endl;
         }
     }
     return;
@@ -89,6 +97,17 @@ Player* Session::getCurrentPlayer() {
 }
 
 
+Player* Session::getOtherPlayer() {
+    Player* currentPlayer = (!playerOnesTurn) ? this->playerOne : this->playerTwo;
+    return currentPlayer;
+}
+
+
+BoardVector* Session::getBoard() {
+    return &board;
+}
+
+
 
 void Session::placeTile(Tile* newTile, std::pair <int, int> position) {
     // Check to make sure the board position is empty before placing it.
@@ -98,5 +117,23 @@ void Session::placeTile(Tile* newTile, std::pair <int, int> position) {
         // Tiles are added back into a players hand, and score is counted, at the end of a players turn so keep that in mind
         // Update movesThisTurn maybe if i keep it
     }
+    return;
+}
+
+
+void Session::printPlayersHand(Player* player) {
+    LinkedList* playersHand = player->getHand();
+    for (int i = 0; i < MAX_TILES_IN_HAND; i++ ) {
+        Tile* curTile = playersHand->get(i)->tile;
+        // Can't print the "," at the end of the hand printing statement so this if statement checks for
+        // the moment when i == 7-1 (-1 because of the array index starting at 0) to change the print statement.
+        if (i != (MAX_TILES_IN_HAND - 1)) {
+            std::cout << curTile->letter << "-" << curTile->value << ", ";
+        }
+        else {
+            std::cout << curTile->letter << "-" << curTile->value;
+        }
+    }
+    std::cout << std::endl << std::endl;
     return;
 }

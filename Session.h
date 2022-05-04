@@ -16,6 +16,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 // using namespace std;
 
 typedef std::vector<std::vector<char>> BoardVector;
@@ -26,12 +27,18 @@ public:
 
    Session();
    ~Session();
-   void placeTile(Tile* newTile, std::pair <int, int> coordinates); // Read the rules to figure out how to add scores to each player
-   // Used to get the object of the current player. This saves time instead of having to do if else statements everytime.
-   Player* getCurrentPlayer();
-   // Maybe create a function that takes in user input here, and that's what controls the flow of each turn
    void generateTileBag();
    void generatePlayers();
+   // Used to get the object of the current player. This saves time instead of having to do if else statements everytime.
+   Player* getCurrentPlayer();
+   // getOtherPlayer is needed because we need to print both players scores at the start of a new turn,
+   // so getting the current player isn't good enough. There's likely a better solution here but it'll 
+   // do for now.
+   Player* getOtherPlayer();
+   void placeTile(Tile* newTile, std::pair <int, int> coordinates);
+   // Could change this to getPlayersHand so its only GameEngine controlling the printing
+   void printPlayersHand(Player* player);
+   BoardVector* getBoard();
 
 
 
@@ -40,7 +47,7 @@ private:
    Player* playerTwo;
    LinkedList* tileBag;
    // This initialises the 2D board vector as a 15x15 array, and all spaces are initialised with a single whitespace
-   BoardVector board{BOARD_SIZE, std::vector<char>{BOARD_SIZE, ' '}};
+   BoardVector board;
    bool playerOnesTurn;
    int movesThisTurn;
 

@@ -3,6 +3,7 @@
 #define ASSIGN2_PLAYER_H
 
 #define MAX_TILES_IN_HAND          7
+#define TILE_NOT_FOUND             -1
 #include "Node.h"
 #include "LinkedList.h"
 #include "Tile.h"
@@ -25,6 +26,12 @@ public:
    // Used by removeTile and replaceTile when looking for a tile that matches the one supplied in the arguments, and returns
    // the index value its first match in the LinkedList
    int findTile(Tile* tile);
+   // Get the username of the player
+   std::string getName();
+   // Get the score of the player
+   int getScore();  
+   // Get players hand
+   LinkedList* getHand();
 
 private:
    LinkedList* playerHand; 
