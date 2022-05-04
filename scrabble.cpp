@@ -9,8 +9,8 @@
 //#include <typeinfo>
 
 using std::cin;
-using  std::cout;
-using  std::endl;
+using std::cout;
+using std::endl;
 using std::string;
 using std::fstream;
 string userInput();
@@ -21,104 +21,114 @@ using std::endl;
 
 #define EXIT_SUCCESS    0
 
-void MainMenu();
+void welcomeMessage();
+void mainMenu();
+void newGame();
+void loadGame();
+void credits();
+void gameplay(GameEngine* gameInstance);
 string userInput();
+
 int main(void) {
-   LinkedList* list = new LinkedList();
-   delete list;
-   std::cout << "TODO: Implement Scrabble!" << std::endl;
-   MainMenu();
-   return EXIT_SUCCESS;
+//   LinkedList* list = new LinkedList();
+//   delete list;
+    welcomeMessage();
+    mainMenu();
+    return EXIT_SUCCESS;
 }
 
-void MainMenu() {
-   cout << "Welcome to Scrabble!"<<endl;
-    cout << "-------------------"<<endl;
-    cout << ""<<endl;
-    cout << "Menu" << endl;
-    cout<< "----" << endl;
+void welcomeMessage() {
+    cout << "Welcome to Scrabble!" << endl;
+    cout << "-------------------"<< endl;
+}
+
+void mainMenu() {
+    cout << "\nMenu" << endl;
+    cout << "----" << endl;
     cout << "1. New Game" << endl;
     cout << "2. Load Game" << endl;
     cout << "3. Credits (Show student information)" << endl;
     cout << "4. Quit" << endl;
-    string choice = userInput();
-    if (choice == "1") {
-        cout << " " << endl;
-        cout << "Starting a New Game" << endl;
-        cout << " " << endl;
-        // cout << "Enter a name for player 1 (uppercase characters only)" << endl;
-        // string name;
-        // cout << "> ", cin>> name;
-        // cout << "Enter a name for player 2 (uppercase characters only)" << endl;
-        // string name2;
-        // cout << "> ", cin>> name2;
-        // cout << "Let's Play!" << endl;
-        GameEngine* gameInstance = new GameEngine();
-        // Need this so it doesn't have a sook at compile time about gameInstance not being used
-        std::cout << typeid(gameInstance).name() << std::endl;
 
-    }
-    if (choice == "2") {
-        cout << "Enter the filename from which load a game" << endl;
-        string dir = userInput();
-        fstream myFile;
-        myFile.open(dir);
-        if (myFile) {
-            /*
-            string line;
-            if (typeid(GotoLine(myFile, 1)).name() == "Ss" && typeid(GotoLine(myFile, 2)).name() == "i"
-            && typeid(GotoLine(myFile, 3)).name() == "Ss" && typeid(GotoLine(myFile, 1)).name() == "Ss") {
-            }
-            */
-            cout << "" << endl;
-            cout << "Scrabble game successfully loaded" << endl;
-            
+    bool toRePrompt = false;
+    string choice;
+    do {
+        choice = userInput();
+        if (choice == "1") {
+            newGame();
+        } else if (choice == "2") {
+            loadGame();
+        } else if (choice == "3") {
+            credits();
+        } else if (choice == "4") {
+            cout << "\nGoodbye" << endl;
+            exit(EXIT_SUCCESS);
+        } else {
+            cout << "Invalid Input" << endl;
+            toRePrompt = true;
         }
-        else {
-            cout << "" << endl;
-            cout << "The file does not exist!" << endl;
+    } while (toRePrompt);
+}
 
+void newGame() {
+    cout << "\nStarting a New Game" << endl;
+//        cout << "\nEnter a name for player 1 (uppercase characters only)" << endl;
+//        string p1Name = userInput();
+//        cout << "\nEnter a name for player 2 (uppercase characters only)" << endl;
+//        string p2Name = userInput();
+//        cout << "\nLet's Play!" << endl;
+
+    // TODO: I reckon we should pass the player 1 and 2 names when instantiating the game engine class
+    GameEngine* gameInstance = new GameEngine();
+//        cout << gameInstance << endl;
+    // Need this so it doesn't have a sook at compile time about gameInstance not being used
+//        std::cout << typeid(gameInstance).name() << std::endl;
+    gameplay(gameInstance); // Continue gameplay in this function
+}
+
+void loadGame() {
+    cout << "Enter the filename from which load a game" << endl;
+    string dir = userInput();
+    fstream myFile;
+    myFile.open(dir);
+    if (myFile) {
+        /*
+        string line;
+        if (typeid(GotoLine(myFile, 1)).name() == "Ss" && typeid(GotoLine(myFile, 2)).name() == "i"
+        && typeid(GotoLine(myFile, 3)).name() == "Ss" && typeid(GotoLine(myFile, 1)).name() == "Ss") {
         }
+        */
+        cout << "" << endl;
+        cout << "Scrabble game successfully loaded" << endl;
 
     }
-    if (choice == "3") {
+    else {
         cout << "" << endl;
-        cout << "----------------------------------" << endl;
-        cout << "Name: Arian Eskandarinejad" << endl;
-        cout << "Strudent ID: s3884975" << endl;
-        cout << "Email: s3884975@student.rmit.edu.au" << endl;
-        cout << "" << endl;
-        cout << "Name: Jeremy Ng Kwik Tung" << endl;
-        cout << "Strudent ID: s3842858" << endl;
-        cout << "Email: s3842858@student.rmit.edu.au" << endl;
-        cout << "" << endl;
-        cout << "Name: Guy Seccull" << endl;
-        cout << "Strudent ID: s3785085" << endl;
-        cout << "Email: s3785085@student.rmit.edu.au" << endl;
-        cout << "" << endl;
-        cout << "Name: Christopher Truong" << endl;
-        cout << "Strudent ID: s3848927" << endl;
-        cout << "Email: s3848927@student.rmit.edu.au" << endl;
-        cout << "----------------------------------" << endl;
-        
-    }
-    if (choice == "4") { 
-        cout << "Goodbye" << endl;
-        exit(4);
-    }
+        cout << "The file does not exist!" << endl;
 
+    }
+}
+
+void credits() {
+    std::ifstream f("authors.txt");
+    cout << "----------------------------------" << endl;
+    if (f.is_open())
+        cout << f.rdbuf() << endl;
+    cout << "----------------------------------" << endl;
+    mainMenu();
+}
+
+void gameplay(GameEngine* gameInstance) {
+    cout << gameInstance << endl;
 }
 
 string userInput() {
     string input;
     cout << "> ";
-    // cin >> input;
-    std::getline(std::cin, input);
+    getline(cin, input);
     if (cin.eof() || input == "^D") {
-        cout << "\nGoodbye" << endl;
-    } else {
-
+        cout << ((input == "^D") ? "\nGoodbye" : "\n\nGoodbye") << endl;
+        exit(EXIT_SUCCESS);
     }
     return input;
-
 }
