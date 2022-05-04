@@ -81,7 +81,7 @@ void Player::replaceTile(Tile* replacementTile, Tile* tileInHand) {
 int Player::findTile(Tile* tile) {
     // Search through the playerHand LinkedList until the tileInHand has been found by checking for the letter, 
     // then return the index location
-    int tileIndex;
+    int tileIndex = TILE_NOT_FOUND;
     for (int i = 0; i < this->playerHand->size(); i++) {
         if (this->playerHand->get(i)->tile->letter == tile->letter) {
             tileIndex = i;

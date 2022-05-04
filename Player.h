@@ -3,6 +3,7 @@
 #define ASSIGN2_PLAYER_H
 
 #define MAX_TILES_IN_HAND          7
+#define TILE_NOT_FOUND             -1
 #include "Node.h"
 #include "LinkedList.h"
 #include "Tile.h"

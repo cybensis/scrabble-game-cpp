@@ -16,6 +16,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 // using namespace std;
 
 typedef std::vector<std::vector<char>> BoardVector;
