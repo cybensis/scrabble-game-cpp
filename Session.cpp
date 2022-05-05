@@ -3,11 +3,11 @@
 
 Session::Session() {
     playerOnesTurn = true;
-    movesThisTurn = 0;
     // Since you can't declare a 2D vectors size in the header file, it needs to be done here. This loops pushes 15 times,
     // another vector that has 15 char slots in it, all initialised with an empty space.
+    // Tile emptyTile(' ',0);
     for (int i = 0; i < BOARD_SIZE; i++) {
-        this->board.push_back(std::vector<char>(BOARD_SIZE, ' '));
+        this->board.push_back(std::vector<Tile*>(BOARD_SIZE, new Tile(' ', 0)));
     }
     generateTileBag();
     generatePlayers();
@@ -96,9 +96,15 @@ Player* Session::getCurrentPlayer() {
     return currentPlayer;
 }
 
+void Session::swapCurrentPlayer() {
+    this->playerOnesTurn = !playerOnesTurn;
+    this->getCurrentPlayer()->fillHand();
+    return;
+}
 
-Player* Session::getOtherPlayer() {
-    Player* currentPlayer = (!playerOnesTurn) ? this->playerOne : this->playerTwo;
+
+Player* Session::getPlayer(int playerNumber) {
+    Player* currentPlayer = (playerNumber == 1) ? this->playerOne : this->playerTwo;
     return currentPlayer;
 }
 
@@ -108,25 +114,28 @@ BoardVector* Session::getBoard() {
 }
 
 
-
-void Session::placeTile(Tile* newTile, std::pair <int, int> position) {
+bool Session::placeTile(int handIndex, std::pair <int, int> position) {
     // Check to make sure the board position is empty before placing it.
-    if (board[position.first][position.second] == ' ') {
-        board[position.first][position.second] = newTile->letter;
-        getCurrentPlayer()->removeTile(newTile);
+    Tile* tileInHand = this->getCurrentPlayer()->getTileInHand(handIndex);
+    Tile* tileCopy = new Tile(tileInHand->letter, tileInHand->value);
+    bool placeSuccess = false;
+    if (board[position.first][position.second]->letter == ' ') {
+        board[position.first][position.second] = tileCopy;
+        getCurrentPlayer()->removeTile(tileCopy);
         // Tiles are added back into a players hand, and score is counted, at the end of a players turn so keep that in mind
         // Update movesThisTurn maybe if i keep it
+        placeSuccess = true;
     }
-    return;
+    return placeSuccess;
 }
 
 
 void Session::printPlayersHand(Player* player) {
     LinkedList* playersHand = player->getHand();
-    for (int i = 0; i < MAX_TILES_IN_HAND; i++ ) {
+    for (int i = 0; i < playersHand->size(); i++ ) {
         Tile* curTile = playersHand->get(i)->tile;
-        // Can't print the "," at the end of the hand printing statement so this if statement checks for
-        // the moment when i == 7-1 (-1 because of the array index starting at 0) to change the print statement.
+        // Can't print the "," at the end of the hand printing statement so this if statement checks for the 
+        // moment when i == 7-1 (-1 because of the array index starting at 0) to change the print statement.
         if (i != (MAX_TILES_IN_HAND - 1)) {
             std::cout << curTile->letter << "-" << curTile->value << ", ";
         }

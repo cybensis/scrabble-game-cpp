@@ -37,27 +37,30 @@ Player::~Player() {
 
 
 
-void Player::updateScore(int pointsToAdd) {
+void Player::addScore(int pointsToAdd) {
     this->playerScore = this->playerScore + pointsToAdd;
     return;
 }
 
 
 
-void Player::addTile(Tile* tile) {
+void Player::fillHand() {
     std::mt19937 mt(1);
     // Generate a random number and randomly choose a tile to add.
-    int randomIndex = (mt() % this->tileBag->size());
-    this->playerHand->addFront(this->tileBag->get(randomIndex)->tile);
+    int tilesToAdd = MAX_TILES_IN_HAND - this->playerHand->size();
+    int tilesAdded = 0;
+    while (this->tileBag->size() > 0 && tilesAdded < tilesToAdd) {
+        int randomIndex = (mt() % this->tileBag->size());
+        this->playerHand->addBack(this->tileBag->get(randomIndex)->tile);
+        tilesAdded += 1;
+    }
     return;
-    // NOTE: Probably need to make it so the tiles are added to the players hand in order
-    // NOTE: Also this whole thing is not right, can't figure out what to do with it until we start making the game.
 } 
 
 
 
 void Player::removeTile(Tile* tile) {
-    int tileIndex = findTile(tile);
+    int tileIndex = findTile(tile->letter);
     this->playerHand->deleteAt(tileIndex);
     return;
 }
@@ -67,23 +70,20 @@ void Player::removeTile(Tile* tile) {
 void Player::replaceTile(Tile* replacementTile, Tile* tileInHand) {
     // Get the first index value for the tileInHand in the players hand LinkedList, then delete it, and add the 
     // replacement at that location 
-    int tileIndex = findTile(tileInHand);
+    int tileIndex = findTile(tileInHand->letter);
     this->playerHand->deleteAt(tileIndex);
     this->playerHand->addAt(replacementTile, tileIndex);
     return;
-    
-    // NOTE: Since it's an ordered list, I think I'll have to re-do this part and add it where it belongs,
-    // based on whatever we order it by, e.g. score or letter
 }
 
 
 
-int Player::findTile(Tile* tile) {
+int Player::findTile(char tileChar) {
     // Search through the playerHand LinkedList until the tileInHand has been found by checking for the letter, 
     // then return the index location
     int tileIndex = TILE_NOT_FOUND;
     for (int i = 0; i < this->playerHand->size(); i++) {
-        if (this->playerHand->get(i)->tile->letter == tile->letter) {
+        if (this->playerHand->get(i)->tile->letter == tileChar) {
             tileIndex = i;
         }
     }
@@ -104,4 +104,8 @@ int Player::getScore() {
 
 LinkedList* Player::getHand() {
     return this->playerHand;
+}
+
+Tile* Player::getTileInHand(int handIndex) {
+    return this->playerHand->get(handIndex)->tile;
 }
