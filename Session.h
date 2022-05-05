@@ -38,6 +38,7 @@ public:
    // Could change this to getPlayersHand so its only GameEngine controlling the printing
    void printPlayersHand(Player* player);
    BoardVector* getBoard();
+   int getTileBagSize();
 
 
 

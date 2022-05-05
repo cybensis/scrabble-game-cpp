@@ -22,8 +22,10 @@
 #define PLACE_CMD_COMPONENTS    4
 #define DONE_INDEX_LOC          1
 // These two are for the maximum and minimum ranges of the Y coordinate on the board
-#define ROW_RANGE_MIN            'A'
-#define ROW_RANGE_MAX            'F'
+#define ROW_RANGE_MIN           'A'
+#define ROW_RANGE_MAX           'F'
+#define USER_PASSED             true
+#define USER_DID_NOT_PASS       false
 #include "Session.h"
 #include <sstream>
 
@@ -41,14 +43,17 @@ public:
    // validCoordinates checks the validity of the coordinates provided in the "place _ at _-_"
    // then returns true or false is they are valid or not.
    bool validCoordinates(std::string coordinates);
+   bool checkEndConditions();
 
 
 
 private:
     Session* instanceData;
-    int movesThisTurn;
     int scoreThisTurn;
     bool playerOnesTurn;
+    Player* currentPlayer;
+    bool turnFinished;
+    int tilesPlacedThisRound;
 
    
 };

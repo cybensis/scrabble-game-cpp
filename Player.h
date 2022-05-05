@@ -16,31 +16,32 @@ public:
 
    Player(std::string playerName, LinkedList* tileBag);
    ~Player();
-   void replaceTile(Tile* replacementTile, Tile* tileInHand);
+   void replaceTile(int tileIndex);
    // Used after a player has finished their turn, and refills their hand with tiles from the tile bag
    void fillHand();
    // Used after placing a tile.
-   void addScore( int pointsToAdd);
-   // When the players places a tile down in Session.cpp, it needs to be removed from their hand with this function.
-   void removeTile(Tile* tile);
+   void addScore(int pointsToAdd);
    // Used by removeTile and replaceTile when looking for a tile that matches the one supplied in the arguments, and returns
    // the index value its first match in the LinkedList
    int findTile(char tileChar);
-   // Get the username of the player
-   std::string getName();
-   // Get the score of the player
-   int getScore();  
-   // Get players hand
-   LinkedList* getHand();
 
+   int getScore();  
+   int getConsecutivePasses();
+   std::string getName();
+   LinkedList* getHand();
    Tile* getTileInHand(int handIndex);
 
+   // This is called when the user places a tile, or they pass their turn. If the userPassedTurn, then consecutivePasses
+   // is incremented, if the user did not pass (userPassedTurn == false), then that resets consecutivePasses to 0.
+   void setConsecutivePasses(bool userPassedTurn);
 
 private:
    LinkedList* playerHand; 
    std::string playerName;
    LinkedList* tileBag;
    int playerScore;
+   int consecutivePasses;
+   std::mt19937 seededRandomizer;
    
 };
 

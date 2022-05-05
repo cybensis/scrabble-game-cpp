@@ -97,8 +97,8 @@ Player* Session::getCurrentPlayer() {
 }
 
 void Session::swapCurrentPlayer() {
-    this->playerOnesTurn = !playerOnesTurn;
     this->getCurrentPlayer()->fillHand();
+    this->playerOnesTurn = !playerOnesTurn;
     return;
 }
 
@@ -120,8 +120,9 @@ bool Session::placeTile(int handIndex, std::pair <int, int> position) {
     Tile* tileCopy = new Tile(tileInHand->letter, tileInHand->value);
     bool placeSuccess = false;
     if (board[position.first][position.second]->letter == ' ') {
+        // Add tile copy then delete it from the players hand.
         board[position.first][position.second] = tileCopy;
-        getCurrentPlayer()->removeTile(tileCopy);
+        getCurrentPlayer()->getHand()->deleteAt(handIndex);
         // Tiles are added back into a players hand, and score is counted, at the end of a players turn so keep that in mind
         // Update movesThisTurn maybe if i keep it
         placeSuccess = true;
@@ -145,4 +146,8 @@ void Session::printPlayersHand(Player* player) {
     }
     std::cout << std::endl << std::endl;
     return;
+}
+
+int Session::getTileBagSize() {
+    return this->tileBag->size();
 }
