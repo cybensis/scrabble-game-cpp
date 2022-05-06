@@ -21,9 +21,11 @@ public:
    void fillHand();
    // Used after placing a tile.
    void addScore(int pointsToAdd);
-   // Used by removeTile and replaceTile when looking for a tile that matches the one supplied in the arguments, and returns
-   // the index value its first match in the LinkedList
+   // Used by when looking for the index location of a tile in the players hand based on a char
    int findTile(char tileChar);
+   // This is the same as findTile() but this also uses usedIndexes to ignore tiles that have already
+   // been placed, based on the hand index
+   int findTile(char tileChar, std::vector<int>* usedIndexes);
 
    int getScore();  
    int getConsecutivePasses();

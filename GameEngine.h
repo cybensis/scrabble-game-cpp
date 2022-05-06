@@ -23,9 +23,10 @@
 #define DONE_INDEX_LOC          1
 // These two are for the maximum and minimum ranges of the Y coordinate on the board
 #define ROW_RANGE_MIN           'A'
-#define ROW_RANGE_MAX           'F'
+#define ROW_RANGE_MAX           'O'
 #define USER_PASSED             true
 #define USER_DID_NOT_PASS       false
+#define BINGO_POINTS            50
 #include "Session.h"
 #include <sstream>
 
@@ -38,13 +39,17 @@ public:
     // inputController is what controls the entire flow of the game (not including menu)
    void gameController();
    void handlePlayerTurn();
-   bool validInput(std::string input);
+   bool validInput(std::string input, std::vector<int>* tileHandIndexes, std::vector<std::pair<int, int>>* tileQueueCoords);
    void printBoard();
    // validCoordinates checks the validity of the coordinates provided in the "place _ at _-_"
    // then returns true or false is they are valid or not.
    bool validCoordinates(std::string coordinates);
    bool checkEndConditions();
-
+   // Pass in a copy of coordinates because we want to remove tiles from it 
+   bool validTilePlacement(std::vector<std::pair<int,int>>* coordinates);
+   // This function is used to check if the board is empty. This is needed since the first tiles 
+   // placed onto the board don't need to intersect with an already placed word because there are none. 
+   bool boardEmpty(); 
 
 
 private:

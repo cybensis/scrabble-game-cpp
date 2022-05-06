@@ -68,7 +68,6 @@ void Session::generatePlayers() {
         std::string userInput;
         std::cout << "Enter a name for player " + std::to_string(currentUser) +" (uppercase characters only)" << std::endl << "> "; 
         std::getline(std::cin, userInput);
-        // std::cin >> userInput;
         // Code yoinked from https://stackoverflow.com/questions/48082092/c-check-if-whole-string-is-uppercase
         // This will check if all characters in a string are uppercase characters AND if they are only valid chars (A-Z)
         if (std::all_of(userInput.begin(), userInput.end(), [](unsigned char c){ return std::isupper(c); }) && userInput.length() > 0) { 
@@ -114,20 +113,47 @@ BoardVector* Session::getBoard() {
 }
 
 
-bool Session::placeTile(int handIndex, std::pair <int, int> position) {
-    // Check to make sure the board position is empty before placing it.
-    Tile* tileInHand = this->getCurrentPlayer()->getTileInHand(handIndex);
-    Tile* tileCopy = new Tile(tileInHand->letter, tileInHand->value);
-    bool placeSuccess = false;
-    if (board[position.first][position.second]->letter == ' ') {
+// The tile positions should already be validated as empty before running placeTile(), so no validation needed
+void Session::placeTiles(std::vector<int>* handIndexes, std::vector<std::pair<int, int>>* tileCoords) {
+    for (int i = 0; i < handIndexes->size(); i++) {
+        Tile* tileInHand = this->getCurrentPlayer()->getTileInHand(handIndexes->at(i));
+        Tile* tileCopy = new Tile(tileInHand->letter, tileInHand->value);
         // Add tile copy then delete it from the players hand.
-        board[position.first][position.second] = tileCopy;
-        getCurrentPlayer()->getHand()->deleteAt(handIndex);
-        // Tiles are added back into a players hand, and score is counted, at the end of a players turn so keep that in mind
-        // Update movesThisTurn maybe if i keep it
-        placeSuccess = true;
+        board[tileCoords->at(i).first][tileCoords->at(i).second] = tileCopy;
     }
-    return placeSuccess;
+
+    // Since the handIndexes are retrieved based on a FULL HAND, when you delete one, the bigger indexes are no 
+    // longer going to be accurate. So to fix this, these two loops will delete the biggest index each loop, which
+    // means that no indexes are going to be offset upon deletion.
+    int tilesToDelete = handIndexes->size();
+    for (int i = 0; i < tilesToDelete; i++) { 
+        // The biggestIndex is in regards to the biggest index in the players hand, but the actual value stored is
+        // the element in handIndexes that holds the biggest index.
+        int biggestIndex = 0;
+        for (int a = 0; a < handIndexes->size(); a++) {
+            biggestIndex = (handIndexes->at(a) > handIndexes->at(biggestIndex)) ? a : biggestIndex;
+        }
+        // After finding the biggest index in the remaining indexes, delete them from both the hand and handIndexes.
+        this->getCurrentPlayer()->getHand()->deleteAt(handIndexes->at(biggestIndex));
+        handIndexes->erase(handIndexes->begin() + biggestIndex);
+    }
+    return;
+}
+
+
+
+bool Session::positionEmpty(std::pair<int, int> position) {
+    bool isEmpty = false;
+    // The validTilePlacement() function in gameEngine can pass in positions outside of the boards boundaries,
+    // so this checks to make sure it doesn't try and access something like board[-1][15]
+    if (position.first >= 0 && position.first < BOARD_SIZE && position.second >= 0 && position.second < BOARD_SIZE) {
+        isEmpty = (board[position.first][position.second]->letter == ' ');
+    }
+    // This check is only needed for the validTilePlacement function when checking the coords around a given coord
+    else if (position.first < 0 || position.first >= BOARD_SIZE || position.second < 0 || position.second >= BOARD_SIZE) {
+        isEmpty = true;
+    }
+    return isEmpty;
 }
 
 

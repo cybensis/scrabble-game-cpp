@@ -82,6 +82,21 @@ int Player::findTile(char tileChar) {
     // NOTE: Maybe add some additional error checking in case the tile can't be found? Depends on the rest of the implementation.
 }
 
+int Player::findTile(char tileChar, std::vector<int>* usedIndexes) {
+    // Search through the playerHand LinkedList until the tileInHand has been found by checking for the letter, 
+    // then return the index location
+    int tileIndex = TILE_NOT_FOUND;
+    for (int i = 0; i < this->playerHand->size(); i++) {
+        // this checks that the tile this loop matches the tile the player wants AND it also checks that they aren't trying to
+        // use a tile thats already been used before
+        if (this->playerHand->get(i)->tile->letter == tileChar && std::find(usedIndexes->begin(), usedIndexes->end(), i) == usedIndexes->end()) {
+            tileIndex = i;
+        }
+    }
+    return tileIndex;
+    // NOTE: Maybe add some additional error checking in case the tile can't be found? Depends on the rest of the implementation.
+}
+
 
 
 std::string Player::getName() {

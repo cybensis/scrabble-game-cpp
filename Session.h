@@ -34,12 +34,12 @@ public:
    void swapCurrentPlayer();
    // When
    Player* getPlayer(int playerNumber);
-   bool placeTile(int handIndex, std::pair <int, int> coordinates);
+   void placeTiles(std::vector<int>* handIndexes, std::vector<std::pair<int, int>>* coordinates);
    // Could change this to getPlayersHand so its only GameEngine controlling the printing
    void printPlayersHand(Player* player);
    BoardVector* getBoard();
    int getTileBagSize();
-
+   bool positionEmpty(std::pair<int, int> position);
 
 
 private:

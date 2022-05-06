@@ -17,6 +17,7 @@ GameEngine::~GameEngine()
     delete this->instanceData;
 }
 
+
 void GameEngine::gameController() {
     // NOTE: The whole playerOne, playerTwo, getCurrentPlayer is very shoddy and could definitely be refactored.
     while (true) {
@@ -32,6 +33,7 @@ void GameEngine::gameController() {
         handlePlayerTurn();
         bool gameFinished = checkEndConditions();
         if (gameFinished) {
+            // Need to check scores then output winner message based on output, also need to see what happens on a draw
             std::cout << "Game finito" << std::endl;
             exit(1);
         }
@@ -65,22 +67,75 @@ bool GameEngine::checkEndConditions() {
 
 
 void GameEngine::handlePlayerTurn() {
+    std::vector<std::pair<int, int>> queueCoords;  
+    std::vector<int> queueHandIndexes;  
     while ( !this->turnFinished ) {
         std::cout << "> ";
         std::string userInput;
         // getline is needed because just using std::cin >> userInput will ignore everything after whitespaces
         std::getline(std::cin, userInput);
         // NOTE: Probably change userInput so it passes an address not a copy
-        if (!validInput(userInput)) {
+        if (!validInput(userInput, &queueHandIndexes, &queueCoords)) {
             std::cout << "Invalid Input" << std::endl;
+        }
+        else if (this->turnFinished && this->tilesPlacedThisRound > 0 && !boardEmpty()) {
+            // validTilePlacement uses queueCoords to confirm that the user is intersecting with an already existing word
+            if (validTilePlacement(&queueCoords)) {
+                this->instanceData->placeTiles(&queueHandIndexes, &queueCoords);
+                // Special operation: Bingo conditions
+                if (this->tilesPlacedThisRound == MAX_MOVES_PER_TURN) {
+                    std::cout << std::endl << "BINGO!!!" << std::endl << std::endl;
+                    this->turnFinished = true;
+                    this->scoreThisTurn += BINGO_POINTS;
+                }
+            }
+            else {
+                std::cout << "Invalid Input" << std::endl;
+                queueCoords.clear();
+                queueHandIndexes.clear();
+                this->tilesPlacedThisRound = 0;
+                this->scoreThisTurn = 0;
+                this->turnFinished = false;
+            }
+        }
+        else if (this->turnFinished && this->tilesPlacedThisRound > 0 && boardEmpty()) {
+            this->instanceData->placeTiles(&queueHandIndexes, &queueCoords);
         }
     }
     return;
 }
 
-// NOTE: When placing a tile, this code places it right after the input has been validated, but I believe they want us to queue the place commands, 
-//       then execute them all at once, at the end of their turn. Shouldn't be too hard to do if we need to change it.
-bool GameEngine::validInput(std::string input) {
+
+
+bool GameEngine::validTilePlacement(std::vector<std::pair<int,int>>* coordinates) {
+    bool tilePlacementValid = false;
+    // This statement loops through all the tiles and if it can find even one tile that connects to an already existing tile on the board
+    // then it is valid
+    // std::pair connectorCoords = std::pair<-1, -1>
+    for (int i = 0; i < coordinates->size(); i++) {
+        int row = coordinates->at(i).first;
+        int col = coordinates->at(i).second;
+        // The position can be -1 or 15 (out of bounds) but positionEmpty() checks for this
+        std::pair<int, int> north(row - 1, col);
+        std::pair<int, int> east(row, col + 1);
+        std::pair<int, int> south(row + 1, col);
+        std::pair<int, int> west(row, col - 1);
+        // NOTE: Try and shorten this if statement
+        // The loop checks every coordinate given, and this if statement checks all those coordinates to see if any of them intersect with an 
+        // already existing tile thats been placed. This is needed because a new word must be connected to one already placed down.
+        // NOTE: This doesn't cover pretty much any of the edge cases, like someone can place one tile not connected, then one tile connected
+        // and it will count. I tried including validation for all the edge cases but its incredibly difficult to cover everything
+        if (!this->instanceData->positionEmpty(north) || !this->instanceData->positionEmpty(east) || !this->instanceData->positionEmpty(south) || !this->instanceData->positionEmpty(west)) {
+            tilePlacementValid = true;
+        }
+    }
+
+    return tilePlacementValid;
+}
+
+
+
+bool GameEngine::validInput(std::string input, std::vector<int>* queueHandIndexes, std::vector<std::pair<int, int>>* queueCoords) {
     std::stringstream inputStream(input); 
     std::vector<std::string> splitInput; 
     std::string tempString;
@@ -107,7 +162,7 @@ bool GameEngine::validInput(std::string input) {
                 // The splitInput.at(..) returns a string, but we only want the char given, and since a string is an array
                 // of chars, using [0] we can get the char value of the provided tile, given the input is only 1 character long
                 chosenTileChar = splitInput.at(TILE_INDEX_LOC)[0];
-                tileHandIndex = this->instanceData->getCurrentPlayer()->findTile(chosenTileChar);
+                tileHandIndex = this->instanceData->getCurrentPlayer()->findTile(chosenTileChar, queueHandIndexes);
             }
             std::string coordinates = splitInput[COORDS_INDEX_LOC];
             // Here we check first if the given tile is actually in the players hand, then we check if the third component
@@ -119,9 +174,11 @@ bool GameEngine::validInput(std::string input) {
                 // Need coordinates.find(COORDINATE_DELIMITER) + 1 because we want it to be AFTER The '-'
                 int colCoord = std::stoi(coordinates.substr(coordinates.find(COORDINATE_DELIMITER) + 1, coordinates.size()));
                 std::pair<int,int> coordinatePair(rowCoord, colCoord);
-                // This will only work if the location on the board isn't already taken
-                if ( this->instanceData->placeTile(tileHandIndex, coordinatePair) ) {
-                    this->scoreThisTurn += this->instanceData->getCurrentPlayer()->getTileInHand(chosenTileChar)->value;
+                // This will only work if the location on the board isn't already taken, and the player hasn't already entered this coordinate
+                if ( this->instanceData->positionEmpty(coordinatePair) && std::find(queueCoords->begin(), queueCoords->end(), coordinatePair) == queueCoords->end()) {
+                    queueHandIndexes->push_back(tileHandIndex);
+                    queueCoords->push_back(coordinatePair);
+                    this->scoreThisTurn += this->instanceData->getCurrentPlayer()->getTileInHand(tileHandIndex)->value;
                     this->tilesPlacedThisRound += 1;
                     noErrors = true;
                 }
@@ -178,13 +235,13 @@ bool GameEngine::validCoordinates(std::string coordinates) {
     // Need to use string not char or int for coordinates incase they try to enter CC-1A or something like 
     // that which would throw an error.
     std::string rowCoord = coordinates.substr(0, coordinates.find(COORDINATE_DELIMITER));
-    // Need coordinates.find(COORDINATE_DELIMITER) + 1 because we want it to be AFTER The '-'
+    // Need coordinates.find(COORDINATE_DELIMITER) + 1 because we want the substring to be AFTER The '-'
     std::string colCoord = coordinates.substr(coordinates.find(COORDINATE_DELIMITER) + 1, coordinates.size());
 
-    // This if checks for 3 things, first if the provided row coordinate is more than one character long, then two and 
-    // three check if the provided character is within the range of the boards row coordinates (A-F), if any one 
+    // This if checks for 3 things, first if the provided row coordinate isn't one character long, then two and 
+    // three check if the provided character is outside the range of the boards row coordinates (A-O), if any one 
     // these fail, then an error is set.
-    if (rowCoord.size() > 1 || rowCoord[0] < ROW_RANGE_MIN ||  rowCoord[0] > ROW_RANGE_MAX) {
+    if (rowCoord.size() != 1 || rowCoord[0] < ROW_RANGE_MIN ||  rowCoord[0] > ROW_RANGE_MAX) {
         noErrors = false;
     }
     // This checks the size of the column coordinate to see if its size is greater than 2 or equal to nothing (0), then it 
@@ -195,6 +252,10 @@ bool GameEngine::validCoordinates(std::string coordinates) {
     // The else if first checks if the digit is two characters long, then it checks if the first character is a 0 (because 
     // they can try place C at A-01), then it checks if the second char is an int or not.
     else if (colCoord.size() == 2 && (colCoord[0] == '0' || !std::isdigit(colCoord[1]) ) ) {
+        noErrors = false;
+    }
+        // The two statements above validate the colCoord as a valid integer, so stoi is safe to use
+    else if (std::stoi(colCoord) < 0 || std::stoi(colCoord) >= BOARD_SIZE) {
         noErrors = false;
     }
 
@@ -233,4 +294,11 @@ void GameEngine::printBoard()
     }
     std::cout << std::endl;
     return;
+}
+
+
+bool GameEngine::boardEmpty() {
+    // By checking that both player scores are equal to 0, that means neither of them have placed 
+    // any tiles, AKA the board is empty.
+    return (this->instanceData->getPlayer(1)->getScore() == 0 && this->instanceData->getPlayer(2)->getScore() == 0);
 }
