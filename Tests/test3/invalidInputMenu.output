@@ -1,0 +1,17 @@
+Welcome to Scrabble!
+-------------------
+
+Menu
+----
+1. New Game
+2. Load Game
+3. Credits (Show student information)
+4. Quit
+
+> hello
+Invalid Input
+> 9212
+Invalid Input
+> 4
+
+Goodbye
