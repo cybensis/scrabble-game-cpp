@@ -59,6 +59,7 @@ private:
     Player* currentPlayer;
     bool turnFinished;
     int tilesPlacedThisRound;
+    bool quitGame;
 
    
 };

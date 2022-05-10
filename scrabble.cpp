@@ -81,10 +81,11 @@ void newGame() {
 
     // TODO: I reckon we should pass the player 1 and 2 names when instantiating the game engine class
     GameEngine* gameInstance = new GameEngine();
-//        cout << gameInstance << endl;
-    // Need this so it doesn't have a sook at compile time about gameInstance not being used
-//        std::cout << typeid(gameInstance).name() << std::endl;
-    gameplay(gameInstance); // Continue gameplay in this function
+    gameInstance->gameController();
+    std::cout << std::endl << "Goodbye" << std::endl;
+    delete gameInstance;
+    return;
+    // gameplay(gameInstance); // Continue gameplay in this function
 }
 
 void loadGame() {

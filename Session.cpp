@@ -5,9 +5,8 @@ Session::Session() {
     playerOnesTurn = true;
     // Since you can't declare a 2D vectors size in the header file, it needs to be done here. This loops pushes 15 times,
     // another vector that has 15 char slots in it, all initialised with an empty space.
-    // Tile emptyTile(' ',0);
     for (int i = 0; i < BOARD_SIZE; i++) {
-        this->board.push_back(std::vector<Tile*>(BOARD_SIZE, new Tile(' ', 0)));
+        this->board.push_back(std::vector<char>(BOARD_SIZE, ' '));
     }
     generateTileBag();
     generatePlayers();
@@ -18,6 +17,9 @@ Session::Session() {
 
 Session::~Session() {
     // TODO
+    delete this->tileBag;
+    delete this->playerOne;
+    delete this->playerTwo;
 }
 
 
@@ -117,9 +119,10 @@ BoardVector* Session::getBoard() {
 void Session::placeTiles(std::vector<int>* handIndexes, std::vector<std::pair<int, int>>* tileCoords) {
     for (int i = 0; i < handIndexes->size(); i++) {
         Tile* tileInHand = this->getCurrentPlayer()->getTileInHand(handIndexes->at(i));
-        Tile* tileCopy = new Tile(tileInHand->letter, tileInHand->value);
         // Add tile copy then delete it from the players hand.
-        board[tileCoords->at(i).first][tileCoords->at(i).second] = tileCopy;
+        int curRow = tileCoords->at(i).first;
+        int curCol = tileCoords->at(i).second;
+        board[curRow][curCol] = tileInHand->letter;
     }
 
     // Since the handIndexes are retrieved based on a FULL HAND, when you delete one, the bigger indexes are no 
@@ -147,7 +150,7 @@ bool Session::positionEmpty(std::pair<int, int> position) {
     // The validTilePlacement() function in gameEngine can pass in positions outside of the boards boundaries,
     // so this checks to make sure it doesn't try and access something like board[-1][15]
     if (position.first >= 0 && position.first < BOARD_SIZE && position.second >= 0 && position.second < BOARD_SIZE) {
-        isEmpty = (board[position.first][position.second]->letter == ' ');
+        isEmpty = (board[position.first][position.second] == ' ');
     }
     // This check is only needed for the validTilePlacement function when checking the coords around a given coord
     else if (position.first < 0 || position.first >= BOARD_SIZE || position.second < 0 || position.second >= BOARD_SIZE) {

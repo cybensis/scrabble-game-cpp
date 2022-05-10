@@ -19,7 +19,7 @@
 #include <algorithm>
 // using namespace std;
 
-typedef std::vector<std::vector<Tile*>> BoardVector;
+typedef std::vector<std::vector<char>> BoardVector;
 //Maybe make a type def for coordinate pairs
 
 class Session {
