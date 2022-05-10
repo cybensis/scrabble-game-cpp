@@ -18,12 +18,12 @@ GameEngine::~GameEngine()
 
 
 void GameEngine::gameController() {
-    std::cout << "Let's Play!" << std::endl << std::endl;
+    std::cout << std::endl << "Let's Play!" << std::endl;
     while (!quitGame) {
         // NOTE: The whole playerOne, playerTwo, getCurrentPlayer is very shoddy and could definitely be refactored.    
         Player* playerOne = this->instanceData->getPlayer(1);
         Player* playerTwo = this->instanceData->getPlayer(2);
-        std::cout << this->currentPlayer->getName() << ", it's your turn" << std::endl;
+        std::cout << std::endl << this->currentPlayer->getName() << ", it's your turn" << std::endl;
         std::cout << "Score for " << playerOne->getName() << ": " << playerOne->getScore() << std::endl;
         std::cout << "Score for " << playerTwo->getName() << ": " << playerTwo->getScore() << std::endl;
         printBoard();
@@ -350,6 +350,7 @@ void GameEngine::printBoard()
         // Exactly 4 dashes are needed per column
         std::cout << "----";
     }
+    std::cout << "-"; // Add one more dash to the end
     std::cout << std::endl;
     // After the board column coordinates have been set, start printing out the actual board contents
     for (int i = 0; i < BOARD_SIZE; i++) {

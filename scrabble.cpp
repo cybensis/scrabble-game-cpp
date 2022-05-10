@@ -26,8 +26,7 @@ void mainMenu();
 void newGame();
 void loadGame();
 void credits();
-void gameplay(GameEngine* gameInstance);
-std::fstream& GotoLine(std::fstream& file, unsigned int num)
+std::fstream& GotoLine(std::fstream& file, unsigned int num);
 string userInput();
 
 int main(void) {
@@ -44,12 +43,12 @@ void welcomeMessage() {
 }
 
 void mainMenu() {
-    cout << "\nMenu" << endl;
+    cout << endl << "Menu" << endl;
     cout << "----" << endl;
     cout << "1. New Game" << endl;
     cout << "2. Load Game" << endl;
     cout << "3. Credits (Show student information)" << endl;
-    cout << "4. Quit" << endl;
+    cout << "4. Quit" << endl << endl;
 
     bool toRePrompt;
     string choice;
@@ -73,20 +72,12 @@ void mainMenu() {
 }
 
 void newGame() {
-    cout << "\nStarting a New Game" << endl;
-//        cout << "\nEnter a name for player 1 (uppercase characters only)" << endl;
-//        string p1Name = userInput();
-//        cout << "\nEnter a name for player 2 (uppercase characters only)" << endl;
-//        string p2Name = userInput();
-//        cout << "\nLet's Play!" << endl;
-
-    // TODO: I reckon we should pass the player 1 and 2 names when instantiating the game engine class
+    cout << endl << endl << "Starting a New Game" << endl;
     GameEngine* gameInstance = new GameEngine();
     gameInstance->gameController();
     std::cout << std::endl << "Goodbye" << std::endl;
     delete gameInstance;
     return;
-    // gameplay(gameInstance); // Continue gameplay in this function
 }
 
 void loadGame() {
@@ -114,16 +105,13 @@ void loadGame() {
 
 void credits() {
     std::ifstream f("authors.txt");
-    cout << "\n----------------------------------" << endl;
+    cout << endl << "----------------------------------" << endl;
     if (f.is_open())
         cout << f.rdbuf();
-    cout << "\n----------------------------------" << endl;
+    cout << endl << "----------------------------------" << endl;
     mainMenu();
 }
 
-void gameplay(GameEngine* gameInstance) {
-    cout << gameInstance << endl;
-}
 //ref = https://stackoverflow.com/questions/5207550/in-c-is-there-a-way-to-go-to-a-specific-line-in-a-text-file
 std::fstream& GotoLine(std::fstream& file, unsigned int num){
     file.seekg(std::ios::beg);

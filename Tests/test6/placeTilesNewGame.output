@@ -8,21 +8,21 @@ Menu
 3. Credits (Show student information)
 4. Quit
 
-> 1
+> 
 
 Starting a New Game
 
 Enter a name for player 1 (uppercase characters only)
-> Bob
+> 
 
 Enter a name for player 2 (uppercase characters only)
-> John
+> 
 
 Let's Play!
 
-Bob, it's your turn
-Score for Bob: 0
-Score for John: 0
+BOB, it's your turn
+Score for BOB: 0
+Score for JOHN: 0
     0   1   2   3   4   5   6   7   8   9   10  11  12  13  14
   -------------------------------------------------------------
 A |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -52,9 +52,9 @@ R-1, D-2, E-1, A-1, C-3, E-1, E-1
 > place E at A5
 > place Done
 
-John, it's your turn
-Score for Bob: 9
-Score for John: 0
+JOHN, it's your turn
+Score for BOB: 9
+Score for JOHN: 0
     0   1   2   3   4   5   6   7   8   9   10  11  12  13  14
   -------------------------------------------------------------
 A | D | E | C | A | R | E |   |   |   |   |   |   |   |   |   |
@@ -76,6 +76,6 @@ O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 Your hand is
 R-1, D-2, E-1, A-1, C-3, E-1, E-1 //TODO to change
 
-> ^D
+> 
 
 Goodbye

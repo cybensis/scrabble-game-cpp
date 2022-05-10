@@ -68,7 +68,7 @@ void Session::generatePlayers() {
     int currentUser = 1;
     while (inputtingUsernames) {
         std::string userInput;
-        std::cout << "Enter a name for player " + std::to_string(currentUser) +" (uppercase characters only)" << std::endl << "> "; 
+        std::cout << std::endl << "Enter a name for player " + std::to_string(currentUser) +" (uppercase characters only)" << std::endl << "> "; 
         std::getline(std::cin, userInput);
         // Code yoinked from https://stackoverflow.com/questions/48082092/c-check-if-whole-string-is-uppercase
         // This will check if all characters in a string are uppercase characters AND if they are only valid chars (A-Z)
