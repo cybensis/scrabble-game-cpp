@@ -16,6 +16,10 @@ int LinkedList::size() {
 }
 
 void LinkedList::clear() {
+    /*
+    ccording to the Linkedlist structure, the pointer
+    changes its navigation till it finds a null element
+    */
     Node* curNode = this->head;
 
     while (curNode != nullptr) {
