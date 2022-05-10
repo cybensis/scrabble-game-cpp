@@ -27,6 +27,7 @@ void newGame();
 void loadGame();
 void credits();
 void gameplay(GameEngine* gameInstance);
+std::fstream& GotoLine(std::fstream& file, unsigned int num)
 string userInput();
 
 int main(void) {
@@ -123,6 +124,15 @@ void credits() {
 void gameplay(GameEngine* gameInstance) {
     cout << gameInstance << endl;
 }
+//ref = https://stackoverflow.com/questions/5207550/in-c-is-there-a-way-to-go-to-a-specific-line-in-a-text-file
+std::fstream& GotoLine(std::fstream& file, unsigned int num){
+    file.seekg(std::ios::beg);
+    for(unsigned int i=0; i < num - 1; ++i){
+        file.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+    }
+    return file;
+}
+
 
 string userInput() {
     string input;
