@@ -227,7 +227,68 @@ bool GameEngine::validInput(std::string input, std::vector<int>* queueHandIndexe
                 noErrors = true;
             }
         }
-        else if (givenCommand == "save") { /* Do save here */ } 
+        else if (givenCommand == "save") { 
+
+            if(splitInput.size() == 2) {
+
+                std::string fileName = splitInput.at(1);
+                std::ofstream save;
+                save.open(fileName);
+
+                LinkedList* hand = instanceData->getPlayer(1)->getHand();
+                save << instanceData->getPlayer(1)->getName() << '\n';
+                save << instanceData->getPlayer(1)->getScore() << '\n';
+
+                for (int i = 0; i < hand->size(); i++ ) {
+                    Tile* curTile = hand->get(i)->tile;
+                    if (i != (MAX_TILES_IN_HAND - 1)) {
+                        save << curTile->letter << "-" << curTile->value << ", ";
+                    }
+                    else {
+                        save << curTile->letter << "-" << curTile->value << '\n';
+                    }
+                }
+
+                hand = instanceData->getPlayer(2)->getHand();
+                save << instanceData->getPlayer(2)->getName() << '\n';
+                save << instanceData->getPlayer(2)->getScore() << '\n';
+
+                for (int i = 0; i < hand->size(); i++ ) {
+                    Tile* curTile = hand->get(i)->tile;
+                    if (i != (MAX_TILES_IN_HAND - 1)) {
+                        save << curTile->letter << "-" << curTile->value << ", ";
+                    }
+                    else {
+                        save << curTile->letter << "-" << curTile->value << '\n';
+                    }
+                }
+
+            BoardVector* board = instanceData->getBoard();
+            save << "    ";
+            for (int i = 0; i < BOARD_SIZE; i++) {
+                std::string colHeader = " " + std::to_string(i) + "  ";
+                save << colHeader.substr(0, COL_HEADER_LENGTH);
+            }
+
+            save << std::endl << "   ";
+            for (int i = 0; i < BOARD_SIZE; i++) {
+                save << "----";
+            }
+
+            save << std::endl;
+            for (int i = 0; i < BOARD_SIZE; i++) {
+                save << " " << char(i + INT_ASCII_OFFSET) << " |";
+                for (int a = 0; a < BOARD_SIZE; a++) {
+                    save << " " << board->at(i).at(a) << " |";
+                }
+            save << std::endl;
+            }
+            save << currentPlayer->getName();
+            std::cout << "Successfully saved!" << std::endl;
+            noErrors = true;
+
+        }
+ } 
         else if (givenCommand == "quit") { this->quitGame = true; noErrors = true;}
     }
 
