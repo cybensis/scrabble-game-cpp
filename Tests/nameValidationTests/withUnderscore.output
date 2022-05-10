@@ -7,23 +7,16 @@ Menu
 2. Load Game
 3. Credits (Show student information)
 4. Quit
-> 1
-
+> 
 Starting a New Game
 Enter a name for player 1 (uppercase characters only)
-> ONE_
-Enter a name for player 1 (uppercase characters only)
-> ON_E
-Enter a name for player 1 (uppercase characters only)
-> ONE
-
+> Enter a name for player 1 (uppercase characters only)
+> Enter a name for player 1 (uppercase characters only)
+> 
 Enter a name for player 2 (uppercase characters only)
-> TWO_
-Enter a name for player 2 (uppercase characters only)
-> TW_O
-Enter a name for player 2 (uppercase characters only)
-> TWO
-
+> Enter a name for player 2 (uppercase characters only)
+> Enter a name for player 2 (uppercase characters only)
+> 
 Let's Play!
 
 ONE, it's your turn
@@ -51,3 +44,5 @@ Your hand is
 R-1, D-2, E-1, A-1, C-3, E-1, E-1
 
 >
+
+Goodbye

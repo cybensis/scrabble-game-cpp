@@ -10,10 +10,8 @@ Menu
 > 
 Starting a New Game
 Enter a name for player 1 (uppercase characters only)
-> Enter a name for player 1 (uppercase characters only)
 > 
 Enter a name for player 2 (uppercase characters only)
-> Enter a name for player 2 (uppercase characters only)
 > 
 Let's Play!
 
@@ -41,6 +39,19 @@ Score for TWO: 0
 Your hand is
 R-1, D-2, E-1, A-1, C-3, E-1, E-1
 
+> Invalid Input
+> Invalid Input
+> Invalid Input
+> Invalid Input
+> Invalid Input
+> Invalid Input
+> Invalid Input
+> Invalid Input
+> Invalid Input
+> Invalid Input
+> Invalid Input
+> Invalid Input
+> Invalid Input
 >
 
 Goodbye

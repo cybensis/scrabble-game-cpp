@@ -42,8 +42,8 @@ Score for TWO: 0
 Your hand is
 R-1, D-2, E-1, A-1, C-3, E-1, E-1
 
-> place Done
+> replace RR
 Invalid Input
-> place done
-Invalid Input
-> 
+> ^D
+
+Goodbye

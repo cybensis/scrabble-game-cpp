@@ -7,15 +7,12 @@ Menu
 2. Load Game
 3. Credits (Show student information)
 4. Quit
-> 1
-
+> 
 Starting a New Game
 Enter a name for player 1 (uppercase characters only)
-> ONE
-
+> 
 Enter a name for player 2 (uppercase characters only)
-> TWO
-
+> 
 Let's Play!
 
 ONE, it's your turn
@@ -42,6 +39,7 @@ Score for TWO: 0
 Your hand is
 R-1, D-2, E-1, A-1, C-3, E-1, E-1
 
-> place R at H-5
-> place D at H-5
-Invalid Input
+> > Invalid Input
+>
+
+Goodbye
