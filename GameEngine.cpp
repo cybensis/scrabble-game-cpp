@@ -123,7 +123,7 @@ bool GameEngine::validTilePlacement(std::vector<std::pair<int,int>>* coordinates
     bool tilePlacementValid = false;
     // This statement loops through all the tiles and if it can find even one tile that connects to an already existing tile on the board
     // then it is valid
-    for (int i = 0; i < coordinates->size(); i++) {
+    for (unsigned int i = 0; i < coordinates->size(); i++) {
         int row = coordinates->at(i).first;
         int col = coordinates->at(i).second;
         // The position can be -1 or 15 (out of bounds) but positionEmpty() checks for this

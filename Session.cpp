@@ -117,7 +117,7 @@ BoardVector* Session::getBoard() {
 
 // The tile positions should already be validated as empty before running placeTile(), so no validation needed
 void Session::placeTiles(std::vector<int>* handIndexes, std::vector<std::pair<int, int>>* tileCoords) {
-    for (int i = 0; i < handIndexes->size(); i++) {
+    for (unsigned int i = 0; i < handIndexes->size(); i++) {
         Tile* tileInHand = this->getCurrentPlayer()->getTileInHand(handIndexes->at(i));
         // Add tile copy then delete it from the players hand.
         int curRow = tileCoords->at(i).first;
@@ -133,7 +133,7 @@ void Session::placeTiles(std::vector<int>* handIndexes, std::vector<std::pair<in
         // The biggestIndex is in regards to the biggest index in the players hand, but the actual value stored is
         // the element in handIndexes that holds the biggest index.
         int biggestIndex = 0;
-        for (int a = 0; a < handIndexes->size(); a++) {
+        for (unsigned int a = 0; a < handIndexes->size(); a++) {
             biggestIndex = (handIndexes->at(a) > handIndexes->at(biggestIndex)) ? a : biggestIndex;
         }
         // After finding the biggest index in the remaining indexes, delete them from both the hand and handIndexes.
