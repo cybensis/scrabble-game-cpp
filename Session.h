@@ -40,6 +40,7 @@ public:
    BoardVector* getBoard();
    int getTileBagSize();
    bool positionEmpty(std::pair<int, int> position);
+   LinkedList* getTileBag();
 
 
 private:

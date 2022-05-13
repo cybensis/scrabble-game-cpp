@@ -283,6 +283,19 @@ bool GameEngine::validInput(std::string input, std::vector<int>* queueHandIndexe
                 }
             save << std::endl;
             }
+
+            LinkedList* tileBag = instanceData->getTileBag();
+
+            for (int i = 0; i < tileBag->size(); i++ ) {
+                Tile* curTile = tileBag->get(i)->tile;
+                if (i != (tileBag->size() - 1)) {
+                    save << curTile->letter << "-" << curTile->value << ", ";
+                }
+                else {
+                    save << curTile->letter << "-" << curTile->value << '\n';
+                }
+            }
+
             save << currentPlayer->getName();
             std::cout << "Successfully saved!" << std::endl;
             noErrors = true;

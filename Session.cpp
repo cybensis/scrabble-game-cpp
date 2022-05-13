@@ -180,3 +180,7 @@ void Session::printPlayersHand(Player* player) {
 int Session::getTileBagSize() {
     return this->tileBag->size();
 }
+
+LinkedList* Session::getTileBag() {
+    return this->tileBag;
+}
