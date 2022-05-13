@@ -72,7 +72,7 @@ void mainMenu() {
 }
 
 void newGame() {
-    cout << endl << endl << "Starting a New Game" << endl;
+    cout << endl << "Starting a New Game" << endl << endl;
     GameEngine* gameInstance = new GameEngine();
     gameInstance->gameController();
     std::cout << std::endl << "Goodbye" << std::endl;

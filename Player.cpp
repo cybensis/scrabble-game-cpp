@@ -18,13 +18,12 @@ Player::Player(std::string playerName, LinkedList* tileBag) {
         // will be something big like 884430747, so to use it to randomly access LinkedList indexes, we take that number and 
         // get the remainder of BIG_NUMBER % TILE_BAG_SIZE, which will always return an element in bounds of the tilebag size.
         int randomIndex = (this->seededRandomizer() % this->tileBag->size());
-        // Need to add the tile from the tile bag to the players hand, then remove it from the tile bag
-        this->playerHand->addFront(this->tileBag->get(randomIndex)->tile);
-        tileBag->deleteAt(randomIndex);
+        // If the tilebag isnt empty, add the tile from the tile bag to the players hand, then remove it from the tile bag
+        if (this->tileBag->size() > 0) {
+            this->playerHand->addFront(this->tileBag->get(randomIndex)->tile);
+            tileBag->deleteAt(randomIndex);
+        }
     }
-
-    // NOTE: Probably need to make it so the tiles are added to the players hand in order
-    // NOTE: Maybe make the random function a class attribute so I don't have to re-declare it everytime
     return;
 }
 
@@ -45,12 +44,14 @@ void Player::addScore(int pointsToAdd) {
 
 
 void Player::fillHand() {
-    // Generate a random number and randomly choose a tile to add.
+    // The tiles to add is based off the max amount of tiles in a hand, minus the current tiles in hand
     int tilesToAdd = MAX_TILES_IN_HAND - this->playerHand->size();
     int tilesAdded = 0;
+    // While there are still tiles in the tilebag, and there are more tiles to add, keep adding them.
     while (this->tileBag->size() > 0 && tilesAdded < tilesToAdd) {
         int randomIndex = (this->seededRandomizer() % this->tileBag->size());
         this->playerHand->addBack(this->tileBag->get(randomIndex)->tile);
+        tileBag->deleteAt(randomIndex);
         tilesAdded += 1;
     }
     return;
@@ -79,22 +80,18 @@ int Player::findTile(char tileChar) {
         }
     }
     return tileIndex;
-    // NOTE: Maybe add some additional error checking in case the tile can't be found? Depends on the rest of the implementation.
 }
 
 int Player::findTile(char tileChar, std::vector<int>* usedIndexes) {
-    // Search through the playerHand LinkedList until the tileInHand has been found by checking for the letter, 
-    // then return the index location
     int tileIndex = TILE_NOT_FOUND;
     for (int i = 0; i < this->playerHand->size(); i++) {
-        // this checks that the tile this loop matches the tile the player wants AND it also checks that they aren't trying to
-        // use a tile thats already been used before
+        // this checks that the tile this loop matches the tile in hand the player wants AND it also checks that they aren't trying to
+        // use a tile in their hand thats already been used before
         if (this->playerHand->get(i)->tile->letter == tileChar && std::find(usedIndexes->begin(), usedIndexes->end(), i) == usedIndexes->end()) {
             tileIndex = i;
         }
     }
     return tileIndex;
-    // NOTE: Maybe add some additional error checking in case the tile can't be found? Depends on the rest of the implementation.
 }
 
 
@@ -121,10 +118,6 @@ int Player::getConsecutivePasses() {
 }
 
 void Player::setConsecutivePasses(bool userPassedTurn ) {
-    if (userPassedTurn) {
-        this->consecutivePasses += 1;
-    }
-    else {
-        this->consecutivePasses = 0;
-    }
+    if (userPassedTurn) { this->consecutivePasses += 1; }
+    else { this->consecutivePasses = 0; }
 }

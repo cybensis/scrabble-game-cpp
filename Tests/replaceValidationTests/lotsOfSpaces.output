@@ -7,22 +7,21 @@ Menu
 2. Load Game
 3. Credits (Show student information)
 4. Quit
-> 1
 
+> 
 Starting a New Game
+
 Enter a name for player 1 (uppercase characters only)
-> ONE
-
+> 
 Enter a name for player 2 (uppercase characters only)
-> TWO
-
+> 
 Let's Play!
 
 ONE, it's your turn
 Score for ONE: 0
 Score for TWO: 0
      0   1   2   3   4   5   6   7   8   9   10  11  12  13  14 
-   ------------------------------------------------------------
+   -------------------------------------------------------------
  A |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  B |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  C |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -42,13 +41,12 @@ Score for TWO: 0
 Your hand is
 R-1, D-2, E-1, A-1, C-3, E-1, E-1
 
-> replace                     R
-
+> 
 TWO, it's your turn
 Score for ONE: 0
 Score for TWO: 0
      0   1   2   3   4   5   6   7   8   9   10  11  12  13  14 
-   ------------------------------------------------------------
+   -------------------------------------------------------------
  A |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  B |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  C |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -65,15 +63,15 @@ Score for TWO: 0
  N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 
+Your hand is
 L-1, N-1, R-1, A-1, A-1, O-1, V-4
 
-> pass
-
+> 
 ONE, it's your turn
 Score for ONE: 0
 Score for TWO: 0
      0   1   2   3   4   5   6   7   8   9   10  11  12  13  14 
-   ------------------------------------------------------------
+   -------------------------------------------------------------
  A |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  B |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  C |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -90,8 +88,9 @@ Score for TWO: 0
  N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 
+Your hand is
 D-2, E-1, A-1, C-3, E-1, E-1, A-1
 
-> ^D
+>
 
 Goodbye

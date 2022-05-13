@@ -68,7 +68,7 @@ void Session::generatePlayers() {
     int currentUser = 1;
     while (inputtingUsernames) {
         std::string userInput;
-        std::cout << std::endl << "Enter a name for player " + std::to_string(currentUser) +" (uppercase characters only)" << std::endl << "> "; 
+        std::cout << "Enter a name for player " + std::to_string(currentUser) +" (uppercase characters only)" << std::endl << "> "; 
         std::getline(std::cin, userInput);
         // Code yoinked from https://stackoverflow.com/questions/48082092/c-check-if-whole-string-is-uppercase
         // This will check if all characters in a string are uppercase characters AND if they are only valid chars (A-Z)
@@ -115,7 +115,7 @@ BoardVector* Session::getBoard() {
 }
 
 
-// The tile positions should already be validated as empty before running placeTile(), so no validation needed
+// The board positions are already validated as empty before running placeTile(), so no validation needed
 void Session::placeTiles(std::vector<int>* handIndexes, std::vector<std::pair<int, int>>* tileCoords) {
     for (unsigned int i = 0; i < handIndexes->size(); i++) {
         Tile* tileInHand = this->getCurrentPlayer()->getTileInHand(handIndexes->at(i));
@@ -130,7 +130,7 @@ void Session::placeTiles(std::vector<int>* handIndexes, std::vector<std::pair<in
     // means that no indexes are going to be offset upon deletion.
     int tilesToDelete = handIndexes->size();
     for (int i = 0; i < tilesToDelete; i++) { 
-        // The biggestIndex is in regards to the biggest index in the players hand, but the actual value stored is
+        // The biggestIndex is in regards to the biggest index number in the players hand, but the actual value stored is
         // the element in handIndexes that holds the biggest index.
         int biggestIndex = 0;
         for (unsigned int a = 0; a < handIndexes->size(); a++) {
@@ -165,8 +165,8 @@ void Session::printPlayersHand(Player* player) {
     for (int i = 0; i < playersHand->size(); i++ ) {
         Tile* curTile = playersHand->get(i)->tile;
         // Can't print the "," at the end of the hand printing statement so this if statement checks for the 
-        // moment when i == 7-1 (-1 because of the array index starting at 0) to change the print statement.
-        if (i != (MAX_TILES_IN_HAND - 1)) {
+        // moment when i == hand size-1 (-1 because of the array index starting at 0) to change the print statement.
+        if (i != (playersHand->size() - 1)) {
             std::cout << curTile->letter << "-" << curTile->value << ", ";
         }
         else {

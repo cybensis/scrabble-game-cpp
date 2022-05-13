@@ -1,7 +1,7 @@
 #!/bin/sh
 if [ $# -eq 0 ]
   then
-    echo "Please supply the name of your executable like ./autoTest.sh ./ass2"
+    echo "Please supply the name of your executable like ./autoTest.sh ./executableName"
     exit 0
 fi
 
@@ -11,7 +11,6 @@ NORMAL='\033[0m'
 
 for i in $(find . -name '*.output');
 do
-    #code to perform task on each file
     # echo $i
     testName=$(echo $i | sed 's/.output//') 
     $1 < "$testName.input" > temp.gameout

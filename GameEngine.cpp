@@ -18,12 +18,12 @@ GameEngine::~GameEngine()
 
 
 void GameEngine::gameController() {
-    std::cout << std::endl << "Let's Play!" << std::endl;
+    std::cout << "Let's Play!" << std::endl << std::endl;
+    // NOTE: The whole playerOne, playerTwo, getCurrentPlayer is very shoddy and could definitely be refactored.    
+    Player* playerOne = this->instanceData->getPlayer(1);
+    Player* playerTwo = this->instanceData->getPlayer(2);
     while (!quitGame) {
-        // NOTE: The whole playerOne, playerTwo, getCurrentPlayer is very shoddy and could definitely be refactored.    
-        Player* playerOne = this->instanceData->getPlayer(1);
-        Player* playerTwo = this->instanceData->getPlayer(2);
-        std::cout << std::endl << this->currentPlayer->getName() << ", it's your turn" << std::endl;
+        std::cout << this->currentPlayer->getName() << ", it's your turn" << std::endl;
         std::cout << "Score for " << playerOne->getName() << ": " << playerOne->getScore() << std::endl;
         std::cout << "Score for " << playerTwo->getName() << ": " << playerTwo->getScore() << std::endl;
         printBoard();
@@ -206,7 +206,7 @@ bool GameEngine::validInput(std::string input, std::vector<int>* queueHandIndexe
             }
 
         }
-        else if (givenCommand == "replace") {
+        else if (givenCommand == "replace" && splitInput.size() == 2) {
             // Make sure that the tile they've given is only 1 character long, and that they haven't placed a tile this round.
             if (splitInput.at(TILE_INDEX_LOC).length() == 1 && this->tilesPlacedThisRound == 0) { 
                 // No need to validate input beyond ".length() == 1" because findTile() will return -1 regardless if its invalid
