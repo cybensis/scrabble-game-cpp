@@ -27,7 +27,7 @@ public:
 
    Session();
    ~Session();
-   void generateTileBag();
+   bool generateTileBag();
    void generatePlayers();
    // Used to get the object of the current player. This saves time instead of having to do if else statements everytime.
    Player* getCurrentPlayer();

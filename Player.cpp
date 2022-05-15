@@ -57,18 +57,18 @@ void Player::fillHand() {
     return;
 } 
 
-void Player::addOneTile() {
-    // The tiles to add is should be one extra than what they have
-    int tilesToAdd = 1;
-    int tilesAdded = 0;
-    // While there are still tiles in the tilebag, and there are more tiles to add, keep adding them.
-    while (this->tileBag->size() > 0 && tilesAdded < tilesToAdd) {
-        int randomIndex = (this->seededRandomizer() % this->tileBag->size());
-        this->playerHand->addBack(this->tileBag->get(randomIndex)->tile);
-        tileBag->deleteAt(randomIndex);
-        tilesAdded += 1;
-    }
-}
+// void Player::addOneTile() {
+//     // The tiles to add is should be one extra than what they have
+//     int tilesToAdd = 1;
+//     int tilesAdded = 0;
+//     // While there are still tiles in the tilebag, and there are more tiles to add, keep adding them.
+//     while (this->tileBag->size() > 0 && tilesAdded < tilesToAdd) {
+//         int randomIndex = (this->seededRandomizer() % this->tileBag->size());
+//         this->playerHand->addBack(this->tileBag->get(randomIndex)->tile);
+//         tileBag->deleteAt(randomIndex);
+//         tilesAdded += 1;
+//     }
+// }
 
 void Player::replaceTile(int tileIndex) {
     this->playerHand->deleteAt(tileIndex);

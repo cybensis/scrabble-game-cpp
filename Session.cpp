@@ -8,8 +8,6 @@ Session::Session() {
     for (int i = 0; i < BOARD_SIZE; i++) {
         this->board.push_back(std::vector<char>(BOARD_SIZE, ' '));
     }
-    generateTileBag();
-    generatePlayers();
     return;
 }
 
@@ -24,9 +22,10 @@ Session::~Session() {
 
 
 
-void Session::generateTileBag() {
+bool Session::generateTileBag() {
 // Need to create the tile bag from ScrabbleTiles.txt first before adding tiles to players hands.
     this->tileBag = new LinkedList();
+    bool error = false;
     // Create an ifstream and open the ScrabbleTiles.txt file
     // Check that the file is good, aka that it exists, its readable, etc, then continue
     std::ifstream tilesFile; 
@@ -44,7 +43,7 @@ void Session::generateTileBag() {
             if (line.substr(SCORE_INDEX,line.length()).find_first_not_of( "0123456789" ) != std::string::npos) {
                 // NOTE: Exit gracefully here, maybe add bool variable: bool errors = false; then set true here.
                 std::cout << "Please make sure there is a valid ScrabbleTiles.txt file in your working directory" << std::endl;
-                exit(1);
+                error = true;
             }
             else {
                 int tileScore = std::stoi(line.substr(SCORE_INDEX,line.length()));
@@ -55,10 +54,9 @@ void Session::generateTileBag() {
     }
     else {
         std::cout << "Please make sure there is a valid ScrabbleTiles.txt file in your working directory" << std::endl;
-        // NOTE: Need to EXIT GRACEFULLY here, so delete everything that's been made, then return which might be hard since this
-        // is a constructor with no return type? I'll figure it out eventually.
-        exit(1);
+        error = true;        
     }
+    return error;
 }
 
 
@@ -79,7 +77,7 @@ void Session::generatePlayers() {
                 this->playerOne = new Player(userInput, this->tileBag);
                 currentUser += 1;
             }
-            else {
+            else if (this->playerOne->getName() != userInput) {
                 this->playerTwo = new Player(userInput, this->tileBag);
                 inputtingUsernames = false;
             }
@@ -98,8 +96,8 @@ Player* Session::getCurrentPlayer() {
 }
 
 void Session::swapCurrentPlayer() {
-    // this->getCurrentPlayer()->fillHand();
-    this->getCurrentPlayer()->addOneTile();
+    this->getCurrentPlayer()->fillHand();
+    // this->getCurrentPlayer()->addOneTile();
     this->playerOnesTurn = !playerOnesTurn;
     return;
 }

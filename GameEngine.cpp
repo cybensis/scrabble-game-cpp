@@ -3,12 +3,16 @@
 GameEngine::GameEngine()
 {
     this->instanceData = new Session();
-    this->currentPlayer = this->instanceData->getCurrentPlayer();
-    this->scoreThisTurn = 0;
-    this->playerOnesTurn = true;
-    this->turnFinished = false;
-    this->tilesPlacedThisRound = 0;
-    this->quitGame = false;
+    bool tileBagError = this->instanceData->generateTileBag();
+    if (!tileBagError) {
+        this->instanceData->generatePlayers();
+        this->currentPlayer = this->instanceData->getCurrentPlayer();
+        this->scoreThisTurn = 0;
+        this->playerOnesTurn = true;
+        this->turnFinished = false;
+        this->tilesPlacedThisRound = 0;
+        this->quitGame = false;
+    }
 }
 
 GameEngine::~GameEngine()
@@ -18,39 +22,42 @@ GameEngine::~GameEngine()
 
 
 void GameEngine::gameController() {
-    std::cout << "Let's Play!" << std::endl << std::endl;
-    // NOTE: The whole playerOne, playerTwo, getCurrentPlayer is very shoddy and could definitely be refactored.    
-    Player* playerOne = this->instanceData->getPlayer(1);
-    Player* playerTwo = this->instanceData->getPlayer(2);
-    while (!quitGame) {
-        std::cout << this->currentPlayer->getName() << ", it's your turn" << std::endl;
-        std::cout << "Score for " << playerOne->getName() << ": " << playerOne->getScore() << std::endl;
-        std::cout << "Score for " << playerTwo->getName() << ": " << playerTwo->getScore() << std::endl;
-        printBoard();
-        std::cout << "Your hand is" << std::endl;
-        this->instanceData->printPlayersHand(this->currentPlayer);
-        
-        // handlePlayerTurn handles the 7 moves a player can make per turn, then everything is reset for the next player
-        handlePlayerTurn();
-        bool gameFinished = checkEndConditions();
-        if (gameFinished) {
-            std::cout << "Game over" << std::endl;
+    // If the tilebag returns an error then the players are never initialized, so the currentPlayer will be null.
+    if (this->currentPlayer != NULL) {
+        std::cout << "Let's Play!" << std::endl << std::endl;
+        // NOTE: The whole playerOne, playerTwo, getCurrentPlayer is very shoddy and could definitely be refactored.    
+        Player* playerOne = this->instanceData->getPlayer(1);
+        Player* playerTwo = this->instanceData->getPlayer(2);
+        while (!quitGame) {
+            std::cout << this->currentPlayer->getName() << ", it's your turn" << std::endl;
             std::cout << "Score for " << playerOne->getName() << ": " << playerOne->getScore() << std::endl;
             std::cout << "Score for " << playerTwo->getName() << ": " << playerTwo->getScore() << std::endl;
-            // If else to check who won or if it was a draw
-            if (playerOne->getScore() > playerTwo->getScore()) { std::cout << "Player " << playerOne->getName() << "won!"; }
-            else if (playerOne->getScore() < playerTwo->getScore()) { std::cout << "Player " << playerTwo->getName() << "won!"; }
-            else if (playerOne->getScore() == playerTwo->getScore()) { std::cout << "The game was a draw!"; }
-            this->quitGame = true;
+            printBoard();
+            std::cout << "Your hand is" << std::endl;
+            this->instanceData->printPlayersHand(this->currentPlayer);
+            
+            // handlePlayerTurn handles the 7 moves a player can make per turn, then everything is reset for the next player
+            handlePlayerTurn();
+            bool gameFinished = checkEndConditions();
+            if (gameFinished) {
+                std::cout << "Game over" << std::endl;
+                std::cout << "Score for " << playerOne->getName() << ": " << playerOne->getScore() << std::endl;
+                std::cout << "Score for " << playerTwo->getName() << ": " << playerTwo->getScore() << std::endl;
+                // If else to check who won or if it was a draw
+                if (playerOne->getScore() > playerTwo->getScore()) { std::cout << "Player " << playerOne->getName() << "won!"; }
+                else if (playerOne->getScore() < playerTwo->getScore()) { std::cout << "Player " << playerTwo->getName() << "won!"; }
+                else if (playerOne->getScore() == playerTwo->getScore()) { std::cout << "The game was a draw!"; }
+                this->quitGame = true;
+            }
+            // Reset all the variables that need to be reset
+            this->currentPlayer->addScore(this->scoreThisTurn);
+            this->instanceData->swapCurrentPlayer();
+            this->currentPlayer = this->instanceData->getCurrentPlayer();
+            this->turnFinished = false;
+            this->tilesPlacedThisRound = 0;
+            this->scoreThisTurn = 0;
+            std::cout << std::endl;
         }
-        // Reset all the variables that need to be reset
-        this->currentPlayer->addScore(this->scoreThisTurn);
-        this->instanceData->swapCurrentPlayer();
-        this->currentPlayer = this->instanceData->getCurrentPlayer();
-        this->turnFinished = false;
-        this->tilesPlacedThisRound = 0;
-        this->scoreThisTurn = 0;
-        std::cout << std::endl;
     }
     return;
 
@@ -92,7 +99,7 @@ void GameEngine::handlePlayerTurn() {
                 this->instanceData->placeTiles(&queueHandIndexes, &queueCoords);
                 // Special operation: Bingo conditions
                 if (this->tilesPlacedThisRound == MAX_MOVES_PER_TURN) {
-                    std::cout << std::endl << "BINGO!!!" << std::endl << std::endl;
+                    std::cout << std::endl << "BINGO!!!" << std::endl;
                     this->scoreThisTurn += BINGO_POINTS;
                 }
             }
