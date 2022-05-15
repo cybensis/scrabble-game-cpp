@@ -8,9 +8,6 @@
 //#include <limits>
 //#include <typeinfo>
 
-using std::cin;
-using std::cout;
-using std::endl;
 using std::string;
 using std::fstream;
 string userInput();
@@ -127,7 +124,7 @@ string userInput() {
     cout << "> ";
     getline(cin, input);
     if (cin.eof() || input == "^D") {
-        cout << ((input == "^D") ? "\nGoodbye" : "\n\nGoodbye") << endl;
+        cout << endl << endl << "Goodbye" << endl;
         exit(EXIT_SUCCESS);
     }
     return input;

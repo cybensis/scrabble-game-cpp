@@ -9,15 +9,12 @@ Menu
 4. Quit
 
 > 
-
 Starting a New Game
 
 Enter a name for player 1 (uppercase characters only)
 > 
-
 Enter a name for player 2 (uppercase characters only)
 > 
-
 Let's Play!
 
 BOB, it's your turn
@@ -45,7 +42,6 @@ Your hand is
 R-1, D-2, E-1, A-1, C-3, E-1, E-1
 
 > 
-
 JOHN, it's your turn
 Score for BOB: 0
 Score for JOHN: 0
@@ -71,7 +67,6 @@ Your hand is
 L-1, N-1, R-1, A-1, A-1, O-1, V-4
 
 > 
-
 BOB, it's your turn
 Score for BOB: 0
 Score for JOHN: 0

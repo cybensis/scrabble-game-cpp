@@ -183,9 +183,11 @@ bool GameEngine::validInput(std::string input, std::vector<int>* queueHandIndexe
                 if (tileHandIndex != TILE_NOT_FOUND && splitInput[PLACE_AT_INDEX_LOC] == "at" && validCoordinates(coordinates)) {
                     // Using [0] again because we only want the char, and if it passes validCoordinates, then we know its only 1 char,
                     // then once we have the char, we can subtract INT_ASCII_OFFSET from it, which will return an int in range 0-14
-                    int rowCoord = coordinates.substr(0, coordinates.find(COORDINATE_DELIMITER))[0] - INT_ASCII_OFFSET;
+                    // int rowCoord = coordinates.substr(0, coordinates.find(COORDINATE_DELIMITER))[0] - INT_ASCII_OFFSET;
+                    int rowCoord = coordinates[COORDINATE_ROW] - INT_ASCII_OFFSET;
                     // Need coordinates.find(COORDINATE_DELIMITER) + 1 because we want it to be AFTER The '-'
-                    int colCoord = std::stoi(coordinates.substr(coordinates.find(COORDINATE_DELIMITER) + 1, coordinates.size()));
+                    // int colCoord = std::stoi(coordinates.substr(coordinates.find(COORDINATE_DELIMITER) + 1, coordinates.size()));
+                    int colCoord = std::stoi(coordinates.substr(COORDINATE_COL, coordinates.size()));
                     std::pair<int,int> coordinatePair(rowCoord, colCoord);
                     // This will only work if the location on the board isn't already taken, and the player hasn't already entered this coordinate
                     if ( this->instanceData->positionEmpty(coordinatePair) && std::find(queueCoords->begin(), queueCoords->end(), coordinatePair) == queueCoords->end()) {
@@ -315,9 +317,12 @@ bool GameEngine::validCoordinates(std::string coordinates) {
     bool noErrors = true;
     // Need to use string not char or int for coordinates incase they try to enter CC-1A or something like 
     // that which would throw an error.
-    std::string rowCoord = coordinates.substr(0, coordinates.find(COORDINATE_DELIMITER));
+    // std::string rowCoord = coordinates.substr(0, coordinates.find(COORDINATE_DELIMITER));
     // Need coordinates.find(COORDINATE_DELIMITER) + 1 because we want the substring to be AFTER The '-'
-    std::string colCoord = coordinates.substr(coordinates.find(COORDINATE_DELIMITER) + 1, coordinates.size());
+    // std::string colCoord = coordinates.substr(coordinates.find(COORDINATE_DELIMITER) + 1, coordinates.size());
+
+    std::string rowCoord = coordinates.substr(COORDINATE_ROW, coordinates.size() - 1); // coordinates.size() - 1, such that it only takes the first character
+    std::string colCoord = coordinates.substr(COORDINATE_COL, coordinates.size());
 
     // row coordinate validation to check if its only 1 char long, and its in range of A-O
     if (rowCoord.size() != 1 || rowCoord[0] < ROW_RANGE_MIN ||  rowCoord[0] > ROW_RANGE_MAX) {
