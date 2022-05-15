@@ -81,45 +81,53 @@ void GameEngine::handlePlayerTurn() {
     std::vector<std::pair<int, int>> queueCoords;  
     std::vector<int> queueHandIndexes;  
     while ( !this->turnFinished ) {
-        std::cout << "> ";
-        std::string userInput;
-        // getline is needed because just using std::cin >> userInput will ignore everything after whitespaces
-        std::getline(std::cin, userInput);
-        if (std::cin.eof() || userInput == "^D") {
-            this->turnFinished = true;
-            this->quitGame = true;
-        }
-        // NOTE: Probably change userInput so it passes an address not a copy
-        else if (!validInput(userInput, &queueHandIndexes, &queueCoords)) {
-            std::cout << "Invalid Input" << std::endl;
-        }
-        else if (this->turnFinished && this->tilesPlacedThisRound > 0 && !boardEmpty()) {
-            // validTilePlacement uses queueCoords to confirm that the user is intersecting with an already existing word
-            if (validTilePlacement(&queueCoords)) {
-                this->instanceData->placeTiles(&queueHandIndexes, &queueCoords);
-                // Special operation: Bingo conditions
-                if (this->tilesPlacedThisRound == MAX_MOVES_PER_TURN) {
-                    std::cout << std::endl << "BINGO!!!" << std::endl;
-                    this->scoreThisTurn += BINGO_POINTS;
-                }
-            }
-            else {
-                std::cout << "Invalid Input" << std::endl;
-                queueCoords.clear();
-                queueHandIndexes.clear();
-                this->tilesPlacedThisRound = 0;
-                this->scoreThisTurn = 0;
-                this->turnFinished = false;
-            }
-        }
-        // This is for the very first turn of a new game
-        else if (this->turnFinished && this->tilesPlacedThisRound > 0 && boardEmpty()) {
-                if (this->tilesPlacedThisRound == MAX_MOVES_PER_TURN) {
-                    std::cout << std::endl << "BINGO!!!" << std::endl << std::endl;
-                    this->scoreThisTurn += BINGO_POINTS;
-                }
+        if (this->tilesPlacedThisRound == MAX_MOVES_PER_TURN) {
+            std::cout << std::endl << "BINGO!!!" << std::endl;
+            this->scoreThisTurn += BINGO_POINTS;
             this->instanceData->placeTiles(&queueHandIndexes, &queueCoords);
+            this->turnFinished = true;
+        } else {
+            std::cout << "> ";
+            std::string userInput;
+            // getline is needed because just using std::cin >> userInput will ignore everything after whitespaces
+            std::getline(std::cin, userInput);
+            if (std::cin.eof() || userInput == "^D") {
+                this->turnFinished = true;
+                this->quitGame = true;
+            }
+            // NOTE: Probably change userInput so it passes an address not a copy
+            else if (!validInput(userInput, &queueHandIndexes, &queueCoords)) {
+                std::cout << "Invalid Input" << std::endl;
+            }
+            else if (this->turnFinished && this->tilesPlacedThisRound > 0 && !boardEmpty()) {
+                // validTilePlacement uses queueCoords to confirm that the user is intersecting with an already existing word
+                if (validTilePlacement(&queueCoords)) {
+                    this->instanceData->placeTiles(&queueHandIndexes, &queueCoords);
+                    // Special operation: Bingo conditions
+                    // if (this->tilesPlacedThisRound == MAX_MOVES_PER_TURN) {
+                    //     std::cout << std::endl << "BINGO!!!" << std::endl;
+                    //     this->scoreThisTurn += BINGO_POINTS;
+                    // }
+                }
+                else {
+                    std::cout << "Invalid Input" << std::endl;
+                    queueCoords.clear();
+                    queueHandIndexes.clear();
+                    this->tilesPlacedThisRound = 0;
+                    this->scoreThisTurn = 0;
+                    this->turnFinished = false;
+                }
+            }
+            // This is for the very first turn of a new game
+            else if (this->turnFinished && this->tilesPlacedThisRound > 0 && boardEmpty()) {
+                    // if (this->tilesPlacedThisRound == MAX_MOVES_PER_TURN) {
+                    //     std::cout << std::endl << "BINGO!!!" << std::endl << std::endl;
+                    //     this->scoreThisTurn += BINGO_POINTS;
+                    // }
+                this->instanceData->placeTiles(&queueHandIndexes, &queueCoords);
+            }
         }
+        
     }
     return;
 }
