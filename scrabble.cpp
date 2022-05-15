@@ -20,6 +20,7 @@ using std::endl;
 
 void welcomeMessage();
 void mainMenu();
+void printMainMenu();
 void newGame();
 void loadGame();
 void credits();
@@ -40,12 +41,7 @@ void welcomeMessage() {
 }
 
 void mainMenu() {
-    cout << endl << "Menu" << endl;
-    cout << "----" << endl;
-    cout << "1. New Game" << endl;
-    cout << "2. Load Game" << endl;
-    cout << "3. Credits (Show student information)" << endl;
-    cout << "4. Quit" << endl << endl;
+    printMainMenu();
 
     bool toRePrompt;
     string choice;
@@ -60,6 +56,7 @@ void mainMenu() {
             credits();
             // Reprompt user after showing credits
             toRePrompt = true;
+            printMainMenu();
         } else if (choice == "4") {
             cout << "\nGoodbye" << endl;
             exit(EXIT_SUCCESS);
@@ -68,6 +65,15 @@ void mainMenu() {
             toRePrompt = true;
         }
     } while (toRePrompt);
+}
+
+void printMainMenu() {
+    cout << endl << "Menu" << endl;
+    cout << "----" << endl;
+    cout << "1. New Game" << endl;
+    cout << "2. Load Game" << endl;
+    cout << "3. Credits (Show student information)" << endl;
+    cout << "4. Quit" << endl << endl;
 }
 
 void newGame() {
