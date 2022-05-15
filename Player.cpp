@@ -57,7 +57,18 @@ void Player::fillHand() {
     return;
 } 
 
-
+void Player::addOneTile() {
+    // The tiles to add is should be one extra than what they have
+    int tilesToAdd = 1;
+    int tilesAdded = 0;
+    // While there are still tiles in the tilebag, and there are more tiles to add, keep adding them.
+    while (this->tileBag->size() > 0 && tilesAdded < tilesToAdd) {
+        int randomIndex = (this->seededRandomizer() % this->tileBag->size());
+        this->playerHand->addBack(this->tileBag->get(randomIndex)->tile);
+        tileBag->deleteAt(randomIndex);
+        tilesAdded += 1;
+    }
+}
 
 void Player::replaceTile(int tileIndex) {
     this->playerHand->deleteAt(tileIndex);
@@ -88,12 +99,16 @@ int Player::findTile(char tileChar) {
 
 int Player::findTile(char tileChar, std::vector<int>* usedIndexes) {
     int tileIndex = TILE_NOT_FOUND;
-    for (int i = 0; i < this->playerHand->size(); i++) {
+    int i = 0;
+    bool tileFound = false;
+    while (i < this->playerHand->size() && !tileFound) {
         // this checks that the tile this loop matches the tile in hand the player wants AND it also checks that they aren't trying to
         // use a tile in their hand thats already been used before
         if (this->playerHand->get(i)->tile->letter == tileChar && std::find(usedIndexes->begin(), usedIndexes->end(), i) == usedIndexes->end()) {
             tileIndex = i;
+            tileFound = true; // To end loop after finding the tile
         }
+        i++;
     }
     return tileIndex;
 }
