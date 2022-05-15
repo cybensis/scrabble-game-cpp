@@ -18,8 +18,10 @@ public:
    Player(std::string playerName, LinkedList* tileBag);
    ~Player();
    void replaceTile(int tileIndex);
-   // Used after a player has finished their turn, and refills their hand with tiles from the tile bag
+   // Fill player's hand only at the beginning of the game
    void fillHand();
+   // To only draw a tile after a player has finished their turn
+   void addOneTile();
    // Used after placing a tile.
    void addScore(int pointsToAdd);
    // Used by when looking for the index location of a tile in the players hand based on a char

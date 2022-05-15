@@ -98,7 +98,8 @@ Player* Session::getCurrentPlayer() {
 }
 
 void Session::swapCurrentPlayer() {
-    this->getCurrentPlayer()->fillHand();
+    // this->getCurrentPlayer()->fillHand();
+    this->getCurrentPlayer()->addOneTile();
     this->playerOnesTurn = !playerOnesTurn;
     return;
 }
