@@ -74,10 +74,14 @@ int Player::findTile(char tileChar) {
     // Search through the playerHand LinkedList until the tileInHand has been found by checking for the letter, 
     // then return the index location
     int tileIndex = TILE_NOT_FOUND;
-    for (int i = 0; i < this->playerHand->size(); i++) {
+    int i = 0;
+    bool tileFound = false;
+    while (i < this->playerHand->size() && !tileFound) {
         if (this->playerHand->get(i)->tile->letter == tileChar) {
             tileIndex = i;
+            tileFound = true; // To end loop after finding the tile
         }
+        i++;
     }
     return tileIndex;
 }
