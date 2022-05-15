@@ -304,7 +304,7 @@ bool GameEngine::validInput(std::string input, std::vector<int>* queueHandIndexe
 
         }
  } 
-        else if (givenCommand == "quit") { this->quitGame = true; noErrors = true;}
+        else if (givenCommand == "quit") { this->quitGame = true; this->turnFinished = true; noErrors = true;}
     }
     return noErrors;
 
