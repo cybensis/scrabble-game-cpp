@@ -58,6 +58,8 @@ void mainMenu() {
             loadGame();
         } else if (choice == "3") {
             credits();
+            // Reprompt user after showing credits
+            toRePrompt = true;
         } else if (choice == "4") {
             cout << "\nGoodbye" << endl;
             exit(EXIT_SUCCESS);
@@ -106,7 +108,12 @@ void credits() {
     if (f.is_open())
         cout << f.rdbuf();
     cout << endl << "----------------------------------" << endl;
-    mainMenu();
+    /*
+    This does to need to recursively call mainMenu().
+    Causes memory leak when viewing credits then quitting.
+    Instead, simply reprompt user for input after showing credits
+    */
+    // mainMenu(); 
 }
 
 //ref = https://stackoverflow.com/questions/5207550/in-c-is-there-a-way-to-go-to-a-specific-line-in-a-text-file
