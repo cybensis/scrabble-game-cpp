@@ -291,7 +291,8 @@ bool GameEngine::validInput(std::string input, std::vector<int>* queueHandIndexe
             for (int i = 0; i < BOARD_SIZE; i++) {
                 save << "----";
             }
-
+            save << "-";
+            
             save << std::endl;
             for (int i = 0; i < BOARD_SIZE; i++) {
                 save << " " << char(i + INT_ASCII_OFFSET) << " |";
