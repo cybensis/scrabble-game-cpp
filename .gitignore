@@ -8,3 +8,5 @@ test.h
 .vscode/c_cpp_properties.json
 .vscode/settings.json
 GameEngine copy.cpp
+tst.txt
+save.txt

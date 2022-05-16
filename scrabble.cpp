@@ -115,6 +115,7 @@ void loadGame() {
         cout << "The file does not exist!" << endl;
 
     }
+    myFile.close();
 }
 
 void credits() {
