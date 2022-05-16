@@ -232,15 +232,16 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
         else if (givenCommand == "save") { 
 
             if(splitInput.size() == 2) {
-
+                //The name of the file is the first element of the vector
                 std::string fileName = splitInput.at(1);
                 std::ofstream save;
                 save.open(fileName);
-
+                //the file reads the player 1 hand
+                //and then read the name and score and save them 
                 LinkedList* hand = instanceData->getPlayer(1)->getHand();
                 save << instanceData->getPlayer(1)->getName() << '\n';
                 save << instanceData->getPlayer(1)->getScore() << '\n';
-
+                //in order to get the elements of the hand (tiles), we do an iteration through the whole vector
                 for (int i = 0; i < hand->size(); i++ ) {
                     Tile* curTile = hand->get(i)->tile;
                     if (i != (MAX_TILES_IN_HAND - 1)) {
@@ -250,7 +251,7 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
                         save << curTile->letter << "-" << curTile->value << '\n';
                     }
                 }
-
+                //we do the same process as above for player 2
                 hand = instanceData->getPlayer(2)->getHand();
                 save << instanceData->getPlayer(2)->getName() << '\n';
                 save << instanceData->getPlayer(2)->getScore() << '\n';
@@ -264,7 +265,8 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
                         save << curTile->letter << "-" << curTile->value << '\n';
                     }
                 }
-
+            //We need to construct the board in the file
+            //After declaration, we write the column names which are less than the board size (length)
             BoardVector* board = instanceData->getBoard();
             save << "   ";
             for (int i = 0; i < BOARD_SIZE; i++) {
@@ -279,6 +281,7 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
             save << "-";
             
             save << std::endl;
+                //In order to save position on the board (e.g. C1), we do a nested for loop which respectively gives the ascii alphabet and the horizontal position
             for (int i = 0; i < BOARD_SIZE; i++) {
                 save << char(i + INT_ASCII_OFFSET) << " |";
                 for (int a = 0; a < BOARD_SIZE; a++) {
@@ -288,7 +291,7 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
             }
 
             LinkedList* tileBag = instanceData->getTileBag();
-
+            //Tilebag is processed/saved like player hand
             for (int i = 0; i < tileBag->size(); i++ ) {
                 Tile* curTile = tileBag->get(i)->tile;
                 if (i != (tileBag->size() - 1)) {
@@ -298,7 +301,7 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
                     save << curTile->letter << "-" << curTile->value << '\n';
                 }
             }
-
+            //At the end, for the last line, we save the current player names
             save << currentPlayer->getName();
             std::cout << "Successfully saved!" << std::endl;
             noErrors = true;
