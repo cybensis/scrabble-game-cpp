@@ -8,8 +8,7 @@ Player::Player(std::string playerName, LinkedList* tileBag) {
     this->playerName = playerName;
     this->tileBag = tileBag;
     // This generates a randomizer using the current time as the seed, which is adequate for this implementation. 
-    // NOTE: Keep this commented out for testing purposes since we need to have the randomizer not actually be
-    // random by providing it the same seed everytime.
+    // NOTE: Keep this commented out for testing purposes so the randomizer is predictable
     // seededRandomizer = std::mt19937(time(nullptr));
     this->seededRandomizer = std::mt19937(1);
     // This loop assigns 7 (MAX_TILES_IN_HAND) tiles randomly to the players hand
@@ -30,7 +29,6 @@ Player::Player(std::string playerName, LinkedList* tileBag) {
 
 
 Player::~Player() {
-    //Deconstructor
     delete this->playerHand;
 }
 

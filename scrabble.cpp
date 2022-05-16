@@ -97,8 +97,8 @@ void loadGame() {
         && typeid(GotoLine(myFile, 3)).name() == "Ss" && typeid(GotoLine(myFile, 1)).name() == "Ss") {
         }
         */
-        int playerName; //used for players 1 and 2
-        int score; 
+        int playerName = 0; //used for players 1 and 2
+        int score = 0; 
         LinkedList* hand;
         if (GotoLine(myFile, 1) << playerName && GotoLine(myFile, 2) << score && GotoLine(myFile, 3) << (char*)&hand 
         && GotoLine(myFile, 4) << playerName && GotoLine(myFile, 5) << score && GotoLine(myFile, 6) << (char*)&hand 

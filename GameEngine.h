@@ -42,7 +42,7 @@ public:
     // inputController is what controls the entire flow of the game (not including menu)
    void gameController();
    void handlePlayerTurn();
-   bool validInput(std::string input, std::vector<int>* tileHandIndexes, std::vector<std::pair<int, int>>* tileQueueCoords);
+   bool validInput(std::string* input, std::vector<int>* tileHandIndexes, std::vector<std::pair<int, int>>* tileQueueCoords);
    void printBoard();
    // validCoordinates checks the validity of the coordinates provided in the "place _ at _-_"
    // then returns true or false is they are valid or not.
