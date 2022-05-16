@@ -61,14 +61,23 @@ bool Session::generateTileBag() {
 
 void Session::generatePlayers() {
     bool inputtingUsernames = true;
+    bool invalidInput = false;
     int currentUser = 1;
     while (inputtingUsernames) {
         std::string userInput;
-        std::cout << "Enter a name for player " + std::to_string(currentUser) +" (uppercase characters only)" << std::endl << "> "; 
+        if (!invalidInput) {
+            std::cout << "Enter a name for player " + std::to_string(currentUser) +" (uppercase characters only)" << std::endl << "> "; 
+        } else {
+            std::cout << "> ";
+        }
+        invalidInput = false;
         std::getline(std::cin, userInput);
         // Code yoinked from https://stackoverflow.com/questions/48082092/c-check-if-whole-string-is-uppercase
         // This will check if all characters in a string are uppercase characters AND if they are only valid chars (A-Z)
-        if (std::all_of(userInput.begin(), userInput.end(), [](unsigned char c){ return std::isupper(c); }) && userInput.length() > 0) { 
+        if (std::cin.eof() || userInput == "^D") {
+            std::cout << std::endl; 
+            inputtingUsernames = false;
+        } else if (std::all_of(userInput.begin(), userInput.end(), [](unsigned char c){ return std::isupper(c); }) && userInput.length() > 0) { 
             // If the currentUser is 1 then create the first player object and add to currentUser, otherwise
             // create playerTwo and end the loop
             if (currentUser == 1) {
@@ -81,7 +90,12 @@ void Session::generatePlayers() {
             }
             // Adding an empty line after each input
             std::cout << std::endl;
+        } else {
+            std::cout << "Invalid Input" << std::endl;
+            invalidInput = true;
         }
+        
+        
     }
     return;
 }

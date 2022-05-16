@@ -22,8 +22,8 @@ GameEngine::~GameEngine()
 
 
 void GameEngine::gameController() {
-    // If the tilebag returns an error then the players are never initialized, so the currentPlayer will be null.
-    if (this->currentPlayer != NULL) {
+    // If the tilebag returns an error then the players are never initialized, so the current and other Player will be null.
+    if (this->instanceData->getPlayer(1) != NULL && this->instanceData->getPlayer(2) != NULL) {
         std::cout << "Let's Play!" << std::endl << std::endl;
         // NOTE: The whole playerOne, playerTwo, getCurrentPlayer is very shoddy and could definitely be refactored.    
         Player* playerOne = this->instanceData->getPlayer(1);
