@@ -266,13 +266,13 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
                 }
 
             BoardVector* board = instanceData->getBoard();
-            save << "    ";
+            save << "   ";
             for (int i = 0; i < BOARD_SIZE; i++) {
                 std::string colHeader = " " + std::to_string(i) + "  ";
                 save << colHeader.substr(0, COL_HEADER_LENGTH);
             }
 
-            save << std::endl << "   ";
+            save << std::endl << "  ";
             for (int i = 0; i < BOARD_SIZE; i++) {
                 save << "----";
             }
@@ -280,7 +280,7 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
             
             save << std::endl;
             for (int i = 0; i < BOARD_SIZE; i++) {
-                save << " " << char(i + INT_ASCII_OFFSET) << " |";
+                save << char(i + INT_ASCII_OFFSET) << " |";
                 for (int a = 0; a < BOARD_SIZE; a++) {
                     save << " " << board->at(i).at(a) << " |";
                 }
@@ -357,14 +357,14 @@ void GameEngine::printBoard()
     // then start printing out " 1  ", " 2  ", etc. Note that the second space after each number is
     // needed because of the "|" in between each coordinate, but if the number is double digits,
     // it has the 2nd space stripped off
-    std::cout << "    ";
+    std::cout << "   ";
     for (int i = 0; i < BOARD_SIZE; i++) {
         std::string colHeader = " " + std::to_string(i) + "  ";
         std::cout << colHeader.substr(0, COL_HEADER_LENGTH);
     }
     // Now printing out the ---- under the column numbers, this time we only need 3 spaces because the
     // dashes start when the "|" start, whereas column numbers start after "|"
-    std::cout << std::endl << "   ";
+    std::cout << std::endl << "  ";
     for (int i = 0; i < BOARD_SIZE; i++) {
         // Exactly 4 dashes are needed per column
         std::cout << "----";
@@ -373,7 +373,7 @@ void GameEngine::printBoard()
     std::cout << std::endl;
     // After the board column coordinates have been set, start printing out the actual board contents
     for (int i = 0; i < BOARD_SIZE; i++) {
-        std::cout << " " << char(i + INT_ASCII_OFFSET) << " |";
+        std::cout << char(i + INT_ASCII_OFFSET) << " |";
         for (int a = 0; a < BOARD_SIZE; a++) {
             std::cout << " " << board->at(i).at(a) << " |";
         }
