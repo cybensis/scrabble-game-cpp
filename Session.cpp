@@ -14,7 +14,6 @@ Session::Session() {
 
 
 Session::~Session() {
-    // TODO
     delete this->tileBag;
     delete this->playerOne;
     delete this->playerTwo;
@@ -41,7 +40,6 @@ bool Session::generateTileBag() {
             // checks if the substring of line that contains the score is actually an integer. This is preferred
             // over something like isalpha because it works on strings as well not just chars.
             if (line.substr(SCORE_INDEX,line.length()).find_first_not_of( "0123456789" ) != std::string::npos) {
-                // NOTE: Exit gracefully here, maybe add bool variable: bool errors = false; then set true here.
                 std::cout << "Please make sure there is a valid ScrabbleTiles.txt file in your working directory" << std::endl;
                 error = true;
             }

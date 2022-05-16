@@ -81,6 +81,7 @@ void GameEngine::handlePlayerTurn() {
     std::vector<std::pair<int, int>> queueCoords;  
     std::vector<int> queueHandIndexes;  
     while ( !this->turnFinished ) {
+        // Special operation: Bingo conditions
         if (this->tilesPlacedThisRound == MAX_MOVES_PER_TURN) {
             std::cout << std::endl << "BINGO!!!" << std::endl;
             this->scoreThisTurn += BINGO_POINTS;
@@ -95,20 +96,10 @@ void GameEngine::handlePlayerTurn() {
                 this->turnFinished = true;
                 this->quitGame = true;
             }
-            // NOTE: Probably change userInput so it passes an address not a copy
-            else if (!validInput(userInput, &queueHandIndexes, &queueCoords)) {
-                std::cout << "Invalid Input" << std::endl;
-            }
+            else if (!validInput(&userInput, &queueHandIndexes, &queueCoords)) { std::cout << "Invalid Input" << std::endl; }
             else if (this->turnFinished && this->tilesPlacedThisRound > 0 && !boardEmpty()) {
                 // validTilePlacement uses queueCoords to confirm that the user is intersecting with an already existing word
-                if (validTilePlacement(&queueCoords)) {
-                    this->instanceData->placeTiles(&queueHandIndexes, &queueCoords);
-                    // Special operation: Bingo conditions
-                    // if (this->tilesPlacedThisRound == MAX_MOVES_PER_TURN) {
-                    //     std::cout << std::endl << "BINGO!!!" << std::endl;
-                    //     this->scoreThisTurn += BINGO_POINTS;
-                    // }
-                }
+                if (validTilePlacement(&queueCoords)) { this->instanceData->placeTiles(&queueHandIndexes, &queueCoords); }
                 else {
                     std::cout << "Invalid Input" << std::endl;
                     queueCoords.clear();
@@ -120,14 +111,9 @@ void GameEngine::handlePlayerTurn() {
             }
             // This is for the very first turn of a new game
             else if (this->turnFinished && this->tilesPlacedThisRound > 0 && boardEmpty()) {
-                    // if (this->tilesPlacedThisRound == MAX_MOVES_PER_TURN) {
-                    //     std::cout << std::endl << "BINGO!!!" << std::endl << std::endl;
-                    //     this->scoreThisTurn += BINGO_POINTS;
-                    // }
                 this->instanceData->placeTiles(&queueHandIndexes, &queueCoords);
             }
         }
-        
     }
     return;
 }
@@ -146,7 +132,6 @@ bool GameEngine::validTilePlacement(std::vector<std::pair<int,int>>* coordinates
         std::pair<int, int> east(row, col + 1);
         std::pair<int, int> south(row + 1, col);
         std::pair<int, int> west(row, col - 1);
-        // NOTE: Try and shorten this if statement
         // The loop checks every coordinate given, and this if statement checks all those coordinates to see if any of them intersect with an 
         // already existing tile thats been placed. This is needed because a new word must be connected to one already placed down.
         // NOTE: This doesn't cover pretty much any of the edge cases, like someone can place one tile not connected, then one tile connected
@@ -161,8 +146,8 @@ bool GameEngine::validTilePlacement(std::vector<std::pair<int,int>>* coordinates
 
 
 
-bool GameEngine::validInput(std::string input, std::vector<int>* queueHandIndexes, std::vector<std::pair<int, int>>* queueCoords) {
-    std::stringstream inputStream(input); 
+bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndexes, std::vector<std::pair<int, int>>* queueCoords) {
+    std::stringstream inputStream(*input); 
     std::vector<std::string> splitInput; 
     std::string tempString;
     // Start by assuming there are errors, then set to true if input is fully validated. Helps remove repetitive else statements
