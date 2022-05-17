@@ -23,7 +23,7 @@ GameEngine::GameEngine(std::fstream* loadFile) {
             std::string input;
             getline(std::cin, input);
             if (std::cin.eof() || input == "^D") {
-                std::cout << std::endl << std::endl << "Goodbye" << std::endl;
+                std::cout << std::endl << std::endl;
                 this->quitGame = true;
             } else {
                 Session* tmp = this->instanceData;
