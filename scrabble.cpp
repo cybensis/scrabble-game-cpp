@@ -90,6 +90,7 @@ void loadGame() {
     myFile.open(dir, std::ios::in);
     GameEngine* gameInstance = new GameEngine(&myFile);
     gameInstance->gameController();
+    std::cout << std::endl << "Goodbye" << std::endl;
     delete gameInstance;
     return;
 }
