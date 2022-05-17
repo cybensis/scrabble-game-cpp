@@ -26,9 +26,6 @@
 #include <cstring>
 #include <regex>
 #include <algorithm>
-#include <cctype>
-#include <locale>
-// using namespace std;
 
 typedef std::vector<std::vector<char>> BoardVector;
 //Maybe make a type def for coordinate pairs
