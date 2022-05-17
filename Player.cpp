@@ -29,17 +29,34 @@ Player::Player(std::string playerName, LinkedList* tileBag) {
 Player::Player(std::string playerName, std::string playerHand, int playerScore) {
     this->playerName = playerName;
     this->playerScore = playerScore;
+    this->playerHand = new LinkedList();
+    
     // Generate player hand from string
-    // Maybe split the string on ", " and put each element into a vector, then split again on "-" and that should split up the chars and scores
-    // then just generate the tiles from there
+    std::stringstream inputStream(playerHand); 
+    std::vector<std::string> splitInput; 
+    std::string tempString;
 
+    if (!inputStream.str().empty()) {
+        while (std::getline(inputStream, tempString, ',')) { 
+            if (tempString.length() > 0) { splitInput.push_back(tempString); }
+        }
+    }
+
+    for (int i = 0; i < splitInput.size(); i++) {
+        int tileScore = std::stoi(splitInput[i].substr(2, splitInput[i].size()));
+        char tileChar = splitInput[i][0];
+        Tile tempTile(tileChar, tileScore);
+        this->playerHand->addBack(&tempTile);
+    }
 }
 
 Player::~Player() {
     delete this->playerHand;
 }
 
-
+void Player::setTileBag(LinkedList* tileBagPtr) {
+    this->tileBag = tileBagPtr;
+}
 
 void Player::addScore(int pointsToAdd) {
     this->playerScore = this->playerScore + pointsToAdd;

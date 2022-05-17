@@ -13,35 +13,61 @@ Session::Session() {
 
 Session::Session(std::fstream* loadFile) {
     if (*loadFile) {
+        // Get the players
         std::string playerName;
-        int playerScore; 
+        std::string playerScore; 
         std::string playerHand;
+        std::getline(*loadFile, playerName);
+        std::getline(*loadFile, playerScore);
+        std::getline(*loadFile, playerHand);
+        this->playerOne = new Player(playerName, playerHand, std::stoi(playerScore));
+
+        std::getline(*loadFile, playerName);
+        std::getline(*loadFile, playerScore);
+        std::getline(*loadFile, playerHand);
+        this->playerTwo = new Player(playerName, playerHand, std::stoi(playerScore));
+
+        // Get the board by getting each line, then reading through each char one by one
         std::string tempString;
-        std::getline(*loadFile, playerName);
-        std::getline(*loadFile, tempString);
-        playerScore = std::stoi(tempString);
-        std::getline(*loadFile, playerHand);
-        this->playerOne = new Player(playerName, playerHand, playerScore);
-
-        std::getline(*loadFile, playerName);
-        std::getline(*loadFile, tempString);
-        playerScore = std::stoi(tempString);
-        std::getline(*loadFile, playerHand);
-        this->playerTwo = new Player(playerName, playerHand, playerScore);
-
-        std::vector<std::string> board;
-        // The board is going to be very difficult to do as you have to do a lot of splitting input, on the "|   |" - Maybe change the save
-        // file so it only prints out the chars, so one row might look like "-------READ----" where "-" are spaces, then you don't have to split
-        // anything
-        // there are 17 lines for the entire board. 
-        for (int i = 0; i < 17; i++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
             std::getline(*loadFile, tempString);
-            board.push_back(tempString);
+            std::vector<char> tempVector;
+            for (int a = 0; a < BOARD_SIZE; a++) {
+                tempVector.push_back(tempString[a]);
+            }
+            this->board.push_back(tempVector);
         }
-        // It will probably crash until this is finished so just exit here
-        exit(1);
+
+        // Get the tilebag by splitting input on "," then by getting substrings of the split strings, it gets
+        // the score and tile char
+        this->tileBag = new LinkedList();
+        std::getline(*loadFile, tempString);
+        std::stringstream inputStream(tempString); 
+        std::vector<std::string> splitInput; 
+        if (!inputStream.str().empty()) {
+            while (std::getline(inputStream, tempString, ',')) { 
+                if (tempString.length() > 0) { splitInput.push_back(tempString); }
+            }
+        }
+
+        for (int i = 0; i < splitInput.size(); i++) {
+            int tileScore = std::stoi(splitInput[i].substr(SCORE_INDEX, splitInput[i].size()));
+            char tileChar = splitInput[i][CHAR_INDEX];
+            Tile tempTile(tileChar, tileScore);
+            this->tileBag->addBack(&tempTile);
+        }
     }
+    this->playerOne->setTileBag(this->tileBag);
+    this->playerTwo->setTileBag(this->tileBag);
+    std::string currentPlayer;
+    std::getline(*loadFile, currentPlayer);
+    loadFile->close();
+    this->playerOnesTurn = (currentPlayer == this->playerOne->getName()) ? true : false;
+    std::cout << "Scrabble game successfully loaded" << std::endl;
+    return;
 }
+
+
 
 Session::~Session() {
     delete this->tileBag;

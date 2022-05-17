@@ -60,7 +60,6 @@ public:
 private:
     Session* instanceData;
     int scoreThisTurn;
-    bool playerOnesTurn;
     Player* currentPlayer;
     bool turnFinished;
     int tilesPlacedThisRound;

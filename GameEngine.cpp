@@ -8,7 +8,6 @@ GameEngine::GameEngine()
         this->instanceData->generatePlayers();
         this->currentPlayer = this->instanceData->getCurrentPlayer();
         this->scoreThisTurn = 0;
-        this->playerOnesTurn = true;
         this->turnFinished = false;
         this->tilesPlacedThisRound = 0;
         this->quitGame = false;
@@ -17,6 +16,11 @@ GameEngine::GameEngine()
 
 GameEngine::GameEngine(std::fstream* loadFile) {
     this->instanceData = new Session(loadFile);
+    this->currentPlayer = this->instanceData->getCurrentPlayer();
+    this->scoreThisTurn = 0;
+    this->turnFinished = false;
+    this->tilesPlacedThisRound = 0;
+    this->quitGame = false;
 }
 
 
@@ -243,54 +247,25 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
                 save.open(fileName);
                 //the file reads the player 1 hand
                 //and then read the name and score and save them 
-                LinkedList* hand = instanceData->getPlayer(1)->getHand();
-                save << instanceData->getPlayer(1)->getName() << '\n';
-                save << instanceData->getPlayer(1)->getScore() << '\n';
-                //in order to get the elements of the hand (tiles), we do an iteration through the whole vector
-                for (int i = 0; i < hand->size(); i++ ) {
-                    Tile* curTile = hand->get(i)->tile;
-                    if (i != (MAX_TILES_IN_HAND - 1)) {
-                        save << curTile->letter << "-" << curTile->value << ", ";
-                    }
-                    else {
-                        save << curTile->letter << "-" << curTile->value << '\n';
-                    }
-                }
-                //we do the same process as above for player 2
-                hand = instanceData->getPlayer(2)->getHand();
-                save << instanceData->getPlayer(2)->getName() << '\n';
-                save << instanceData->getPlayer(2)->getScore() << '\n';
-
-                for (int i = 0; i < hand->size(); i++ ) {
-                    Tile* curTile = hand->get(i)->tile;
-                    if (i != (MAX_TILES_IN_HAND - 1)) {
-                        save << curTile->letter << "-" << curTile->value << ", ";
-                    }
-                    else {
-                        save << curTile->letter << "-" << curTile->value << '\n';
+                LinkedList* hand;
+                for (int a = 0; a < 2; a++) {
+                    hand = instanceData->getPlayer(a)->getHand();
+                    save << instanceData->getPlayer(a)->getName() << '\n';
+                    save << instanceData->getPlayer(a)->getScore() << '\n';
+                    //in order to get the elements of the hand (tiles), we do an iteration through the whole vector
+                    for (int i = 0; i < hand->size(); i++ ) {
+                        Tile* curTile = hand->get(i)->tile;
+                        if (i != (MAX_TILES_IN_HAND - 1)) { save << curTile->letter << "-" << curTile->value << ","; }
+                        else { save << curTile->letter << "-" << curTile->value << '\n'; }
                     }
                 }
             //We need to construct the board in the file
             //After declaration, we write the column names which are less than the board size (length)
             BoardVector* board = instanceData->getBoard();
-            save << "   ";
+            //In order to save position on the board (e.g. C1), we do a nested for loop which respectively gives the ascii alphabet and the horizontal position
             for (int i = 0; i < BOARD_SIZE; i++) {
-                std::string colHeader = " " + std::to_string(i) + "  ";
-                save << colHeader.substr(0, COL_HEADER_LENGTH);
-            }
-
-            save << std::endl << "  ";
-            for (int i = 0; i < BOARD_SIZE; i++) {
-                save << "----";
-            }
-            save << "-";
-            
-            save << std::endl;
-                //In order to save position on the board (e.g. C1), we do a nested for loop which respectively gives the ascii alphabet and the horizontal position
-            for (int i = 0; i < BOARD_SIZE; i++) {
-                save << char(i + INT_ASCII_OFFSET) << " |";
                 for (int a = 0; a < BOARD_SIZE; a++) {
-                    save << " " << board->at(i).at(a) << " |";
+                    save << board->at(i).at(a);
                 }
             save << std::endl;
             }
@@ -300,7 +275,7 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
             for (int i = 0; i < tileBag->size(); i++ ) {
                 Tile* curTile = tileBag->get(i)->tile;
                 if (i != (tileBag->size() - 1)) {
-                    save << curTile->letter << "-" << curTile->value << ", ";
+                    save << curTile->letter << "-" << curTile->value << ",";
                 }
                 else {
                     save << curTile->letter << "-" << curTile->value << '\n';

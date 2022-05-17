@@ -93,32 +93,32 @@ void loadGame() {
     myFile.open(dir, std::ios::in);
     GameEngine* gameInstance = new GameEngine(&myFile);
     gameInstance->gameController();
-    if (myFile) {
-        /*
-        string line;
-        if (typeid(GotoLine(myFile, 1)).name() == "Ss" && typeid(GotoLine(myFile, 2)).name() == "i"
-        && typeid(GotoLine(myFile, 3)).name() == "Ss" && typeid(GotoLine(myFile, 1)).name() == "Ss") {
-        }
-        */
-        int playerName = 0; //used for players 1 and 2
+    // if (myFile) {
+    //     /*
+    //     string line;
+    //     if (typeid(GotoLine(myFile, 1)).name() == "Ss" && typeid(GotoLine(myFile, 2)).name() == "i"
+    //     && typeid(GotoLine(myFile, 3)).name() == "Ss" && typeid(GotoLine(myFile, 1)).name() == "Ss") {
+    //     }
+    //     */
+    //     int playerName = 0; //used for players 1 and 2
 
-        int score = 0; 
-        LinkedList* hand;
-        if (GotoLine(myFile, 1) << playerName && GotoLine(myFile, 2) << score && GotoLine(myFile, 3) << (char*)&hand 
-        && GotoLine(myFile, 4) << playerName && GotoLine(myFile, 5) << score && GotoLine(myFile, 6) << (char*)&hand 
-        && GotoLine(myFile, 8) << (char*)&hand && GotoLine(myFile, 9) << playerName) {
-            cout << "" << endl;
-            cout << "Scrabble game successfully loaded" << endl;
-        }
-        cout  << "The file is not in a correct format" << endl;
+    //     int score = 0; 
+    //     LinkedList* hand;
+    //     if (GotoLine(myFile, 1) << playerName && GotoLine(myFile, 2) << score && GotoLine(myFile, 3) << (char*)&hand 
+    //     && GotoLine(myFile, 4) << playerName && GotoLine(myFile, 5) << score && GotoLine(myFile, 6) << (char*)&hand 
+    //     && GotoLine(myFile, 8) << (char*)&hand && GotoLine(myFile, 9) << playerName) {
+    //         cout << "" << endl;
+    //         cout << "Scrabble game successfully loaded" << endl;
+    //     }
+    //     cout  << "The file is not in a correct format" << endl;
 
-    }
-    else {
-        cout << "" << endl;
-        cout << "The file does not exist!" << endl;
+    // }
+    // else {
+    //     cout << "" << endl;
+    //     cout << "The file does not exist!" << endl;
 
-    }
-    myFile.close();
+    // }
+    // myFile.close();
 }
 
 void credits() {
