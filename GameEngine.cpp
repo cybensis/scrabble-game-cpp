@@ -351,7 +351,17 @@ bool GameEngine::validCoordinates(std::string coordinates) {
     // Need coordinates.find(COORDINATE_DELIMITER) + 1 because we want the substring to be AFTER The '-'
     // std::string colCoord = coordinates.substr(coordinates.find(COORDINATE_DELIMITER) + 1, coordinates.size());
 
-    std::string rowCoord = coordinates.substr(COORDINATE_ROW, coordinates.size() - 1); // coordinates.size() - 1, such that it only takes the first character
+    std::string rowCoord;
+
+    if(coordinates.size() == COORD_LEN_3) {
+        // If length of coordinates is 3 e.g. A10
+        rowCoord = coordinates.substr(COORDINATE_ROW, coordinates.size() - 2);
+    }
+    else if(coordinates.size() == COORD_LEN_2) {
+        // If length of coordinates is 2 e.g. A5
+        rowCoord = coordinates.substr(COORDINATE_ROW, coordinates.size() - 1);
+    }
+    
     std::string colCoord = coordinates.substr(COORDINATE_COL, coordinates.size());
 
     // row coordinate validation to check if its only 1 char long, and its in range of A-O

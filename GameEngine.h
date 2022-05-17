@@ -29,6 +29,8 @@
 #define USER_PASSED             true
 #define USER_DID_NOT_PASS       false
 #define BINGO_POINTS            50
+#define COORD_LEN_3             3
+#define COORD_LEN_2             2
 #include "Session.h"
 #include <sstream>
 #include <fstream>
