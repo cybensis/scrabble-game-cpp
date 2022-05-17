@@ -13,6 +13,7 @@ Session::Session() {
 }
 
 Session::Session(std::fstream* loadFile) {
+    this->invalidFile = false;
     if (*loadFile) {
         // Get the players
         std::string playerName;
@@ -23,7 +24,6 @@ Session::Session(std::fstream* loadFile) {
         std::getline(*loadFile, playerHand);
         if (playerName.length() > 0 && regex_match(playerName, std::regex(CAPS_ONLY_REGEX)) && regex_match(playerScore, std::regex(DIGIT_ONLY_REGEX)) 
         && playerScore.length() > 0 && isTileListValid(playerHand, MAX_TILES_IN_HAND)) {
-            std::cout << "Player 1 valid" << std::endl;
             this->playerOne = new Player(playerName, playerHand, std::stoi(playerScore));
         } else {
             this->invalidFile = true;
@@ -34,79 +34,84 @@ Session::Session(std::fstream* loadFile) {
         std::getline(*loadFile, playerName);
         std::getline(*loadFile, playerScore);
         std::getline(*loadFile, playerHand);
-        this->playerTwo = new Player(playerName, playerHand, std::stoi(playerScore));
-        //std::cout << "Checkpoint test: 1" << std::endl;
-        // Get the board by getting each line, then reading through each char one by one
-        std::string tempString;
-        std::getline(*loadFile, tempString);
-        std::getline(*loadFile, tempString);
-        for (int i = 0; i < BOARD_SIZE; i++) {
+        if (!this->invalidFile && playerName.length() > 0 && regex_match(playerName, std::regex(CAPS_ONLY_REGEX)) 
+        && regex_match(playerScore, std::regex(DIGIT_ONLY_REGEX)) && playerScore.length() > 0 && isTileListValid(playerHand, MAX_TILES_IN_HAND)) {
+            this->playerTwo = new Player(playerName, playerHand, std::stoi(playerScore));
+        } else {
+            this->invalidFile = true;
+        }
+
+        if (!invalidFile) {
+            // Skips the two header lines
+            std::string tempString;
             std::getline(*loadFile, tempString);
-            std::stringstream ss(tempString);
-            std::vector<std::string> ftl;
+            std::getline(*loadFile, tempString);
+            // Get the board by getting each line, then reading through each char one by one
+            for (int i = 0; i < BOARD_SIZE; i++) {
+                std::getline(*loadFile, tempString);
+                std::stringstream ss(tempString);
+                std::vector<std::string> ftl;
 
-        while(std::getline(ss, tempString, '|')){
-            ftl.push_back(tempString);
+                while(std::getline(ss, tempString, '|')){
+                    ftl.push_back(tempString);
+                }
+
+                ftl.erase(ftl.begin());
+                std::vector<char> tempCharVector;
+                for(unsigned int i = 0; i < ftl.size(); i++) {
+                    tempCharVector.push_back(ftl.at(i)[1]);
+                }
+
+                this->board.push_back(tempCharVector);
+            }
         }
-
-        ftl.erase(ftl.begin());
-        std::vector<char> tempCharVector;
-        for(unsigned int i = 0; i < ftl.size(); i++) {
-            tempCharVector.push_back(ftl.at(i)[1]);
-        }
-
-        this->board.push_back(tempCharVector);
-
-            //std::cout << i << ". " << tempString << std::endl;
-            // std::vector<char> tempVector;
-            // for (int a = 0; a < BOARD_SIZE; a++) {
-            //     tempVector.push_back(tempString[a]);
-            // }
-            // this->board.push_back(tempVector);
-        }
-        // // Get the board by getting each line, then reading through each char one by one
-        // std::string tempString;
-        // for (int i = 0; i < BOARD_SIZE; i++) {
-        //     std::getline(*loadFile, tempString);
-        //     std::cout << i << ". " << tempString << std::endl;
-        //     // std::vector<char> tempVector;
-        //     // for (int a = 0; a < BOARD_SIZE; a++) {
-        //     //     tempVector.push_back(tempString[a]);
-        //     // }
-        //     // this->board.push_back(tempVector);
-        // }
+       
         // // Get the tilebag by splitting input on "," then by getting substrings of the split strings, it gets
         // // the score and tile char
         this->tileBag = new LinkedList();
         std::string tileBagString;
         std::getline(*loadFile, tileBagString);
-        std::stringstream inputStream(tileBagString); 
-        std::vector<std::string> splitTileBagString;
+        if (tileBagString.length() > 0 && isTileListValid(tileBagString, MAX_TILES_IN_BAG)) {
 
-        std::string tileString;
+            std::stringstream inputStream(tileBagString); 
+            std::vector<std::string> splitTileBagString;
 
-        if (!inputStream.str().empty()) {
-            while (std::getline(inputStream, tileString, ',')) { 
-                if (tileString.length() > 0) { splitTileBagString.push_back(tileString); }
+            std::string tileString;
+
+            if (!inputStream.str().empty()) {
+                while (std::getline(inputStream, tileString, ',')) { 
+                    if (tileString.length() > 0) { splitTileBagString.push_back(tileString); }
+                }
             }
+
+            for (int i = 0; i < int(splitTileBagString.size()); i++) {
+                int tileScore = std::stoi(splitTileBagString[i].substr(SCORE_INDEX, splitTileBagString[i].size()));
+                char tileChar = splitTileBagString[i][CHAR_INDEX];
+                Tile tempTile(tileChar, tileScore);
+                this->tileBag->addBack(&tempTile);
+            }
+        } else {
+            this->invalidFile = true;
         }
 
-        for (int i = 0; i < int(splitTileBagString.size()); i++) {
-            int tileScore = std::stoi(splitTileBagString[i].substr(SCORE_INDEX, splitTileBagString[i].size()));
-            char tileChar = splitTileBagString[i][CHAR_INDEX];
-            Tile tempTile(tileChar, tileScore);
-            this->tileBag->addBack(&tempTile);
-        }
-
-        this->playerOne->setTileBag(this->tileBag);
-        this->playerTwo->setTileBag(this->tileBag);
+        // Checks the <current player name>
         std::string currentPlayer;
         std::getline(*loadFile, currentPlayer);
-        this->playerOnesTurn = (currentPlayer == this->playerOne->getName()) ? true : false;
-        std::cout << "Scrabble game successfully loaded" << std::endl;
+        if (currentPlayer.length() == 0 || !regex_match(currentPlayer, std::regex(CAPS_ONLY_REGEX))) {
+            this->invalidFile = true;
+        }
+
+        if (!invalidFile) {
+            this->playerOne->setTileBag(this->tileBag);
+            this->playerTwo->setTileBag(this->tileBag);
+            this->playerOnesTurn = (currentPlayer == this->playerOne->getName()) ? true : false;
+            std::cout << std::endl << "Scrabble game successfully loaded" << std::endl;
+        }
 
     } else {
         this->invalidFile = true;
+    }
+    if (this->invalidFile) {
         std::cout << "Invalid Input" << std::endl;
     }
     loadFile->close();
@@ -130,7 +135,6 @@ bool Session::isTileListValid(std::string tiles, int maxSize) {
             std::string tile = *iter;
             ltrim(tile);
             if (lengthHand < maxSize) {
-                std::cout << tile << std::endl;
                 if (!regex_match(tile, std::regex(TILE_REGEX))) { // Checks if current tile is <letter>-<number> format
                     isValid = false;
                 } 

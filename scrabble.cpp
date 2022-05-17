@@ -88,7 +88,7 @@ void newGame() {
 }
 
 void loadGame() {
-    cout << "Enter the filename from which load a game" << endl;
+    cout << endl << "Enter the filename from which load a game" << endl;
     string dir = userInput();
     fstream myFile;
     myFile.open(dir, std::ios::in);

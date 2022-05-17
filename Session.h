@@ -8,7 +8,7 @@
 // 0, then a space at index 1 which we ignore, and score follows immediately after at index 2.
 #define CHAR_INDEX           0
 #define SCORE_INDEX          2
-#define TILE_REGEX           "^[A-Z]-\\d$"
+#define TILE_REGEX           "^[A-Z]-(\\d|10)$"
 #define COMMA_SPLIT_REGEX    ","
 #define MAX_TILES_IN_HAND    7
 #define MAX_TILES_IN_BAG     98
