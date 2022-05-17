@@ -2,7 +2,8 @@
 #include "Session.h"
 
 Session::Session() {
-    playerOnesTurn = true;
+    this->playerOnesTurn = true;
+    this->invalidFile = false;
     // Since you can't declare a 2D vectors size in the header file, it needs to be done here. This loops pushes 15 times,
     // another vector that has 15 char slots in it, all initialised with an empty space.
     for (int i = 0; i < BOARD_SIZE; i++) {
@@ -26,45 +27,55 @@ Session::Session(std::fstream* loadFile) {
         std::getline(*loadFile, playerScore);
         std::getline(*loadFile, playerHand);
         this->playerTwo = new Player(playerName, playerHand, std::stoi(playerScore));
-
+        std::cout << "Checkpoint test: 1" << std::endl;
         // Get the board by getting each line, then reading through each char one by one
         std::string tempString;
         for (int i = 0; i < BOARD_SIZE; i++) {
             std::getline(*loadFile, tempString);
-            std::vector<char> tempVector;
-            for (int a = 0; a < BOARD_SIZE; a++) {
-                tempVector.push_back(tempString[a]);
-            }
-            this->board.push_back(tempVector);
+            std::cout << i << ". " << tempString << std::endl;
+            // std::vector<char> tempVector;
+            // for (int a = 0; a < BOARD_SIZE; a++) {
+            //     tempVector.push_back(tempString[a]);
+            // }
+            // this->board.push_back(tempVector);
         }
+        // // Get the tilebag by splitting input on "," then by getting substrings of the split strings, it gets
+        // // the score and tile char
+        // this->tileBag = new LinkedList();
+        // std::getline(*loadFile, tempString);
+        // std::stringstream inputStream(tempString); 
+        // std::vector<std::string> splitInput; 
+        // if (!inputStream.str().empty()) {
+        //     while (std::getline(inputStream, tempString, ',')) { 
+        //         if (tempString.length() > 0) { splitInput.push_back(tempString); }
+        //     }
+        // }
 
-        // Get the tilebag by splitting input on "," then by getting substrings of the split strings, it gets
-        // the score and tile char
-        this->tileBag = new LinkedList();
-        std::getline(*loadFile, tempString);
-        std::stringstream inputStream(tempString); 
-        std::vector<std::string> splitInput; 
-        if (!inputStream.str().empty()) {
-            while (std::getline(inputStream, tempString, ',')) { 
-                if (tempString.length() > 0) { splitInput.push_back(tempString); }
-            }
-        }
+        // for (int i = 0; i < int(splitInput.size()); i++) {
+        //     int tileScore = std::stoi(splitInput[i].substr(SCORE_INDEX, splitInput[i].size()));
+        //     char tileChar = splitInput[i][CHAR_INDEX];
+        //     Tile tempTile(tileChar, tileScore);
+        //     this->tileBag->addBack(&tempTile);
+        // }
 
-        for (int i = 0; i < int(splitInput.size()); i++) {
-            int tileScore = std::stoi(splitInput[i].substr(SCORE_INDEX, splitInput[i].size()));
-            char tileChar = splitInput[i][CHAR_INDEX];
-            Tile tempTile(tileChar, tileScore);
-            this->tileBag->addBack(&tempTile);
-        }
+        // this->playerOne->setTileBag(this->tileBag);
+        // this->playerTwo->setTileBag(this->tileBag);
+        // std::string currentPlayer;
+        // std::getline(*loadFile, currentPlayer);
+        // this->playerOnesTurn = (currentPlayer == this->playerOne->getName()) ? true : false;
+        std::cout << "Scrabble game successfully loaded" << std::endl;
+
+    } else {
+        this->invalidFile = true;
+        std::cout << "Invalid Input" << std::endl;
     }
-    this->playerOne->setTileBag(this->tileBag);
-    this->playerTwo->setTileBag(this->tileBag);
-    std::string currentPlayer;
-    std::getline(*loadFile, currentPlayer);
     loadFile->close();
-    this->playerOnesTurn = (currentPlayer == this->playerOne->getName()) ? true : false;
-    std::cout << "Scrabble game successfully loaded" << std::endl;
+    // this->invalidFile = true; // TODO to remove 
     return;
+}
+
+bool Session::getIfFileInvalid() {
+    return this->invalidFile;
 }
 
 

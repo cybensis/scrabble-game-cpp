@@ -28,6 +28,7 @@ public:
    Session();
    Session(std::fstream* loadFile);
    ~Session();
+   bool getIfFileInvalid();
    bool generateTileBag();
    void generatePlayers();
    // Used to get the object of the current player. This saves time instead of having to do if else statements everytime.
@@ -51,6 +52,7 @@ private:
    // This initialises the 2D board vector as a 15x15 array, and all spaces are initialised with a single whitespace
    BoardVector board;
    bool playerOnesTurn;
+   bool invalidFile;
 
    
 };

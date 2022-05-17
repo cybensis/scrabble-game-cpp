@@ -15,12 +15,37 @@ GameEngine::GameEngine()
 }
 
 GameEngine::GameEngine(std::fstream* loadFile) {
-    this->instanceData = new Session(loadFile);
-    this->currentPlayer = this->instanceData->getCurrentPlayer();
+    this->quitGame = false;
+    bool toRePrompt = false;
+    do {
+        if (toRePrompt) {
+            std::cout << "> ";
+            std::string input;
+            getline(std::cin, input);
+            if (std::cin.eof() || input == "^D") {
+                std::cout << std::endl << std::endl << "Goodbye" << std::endl;
+                this->quitGame = true;
+            } else {
+                Session* tmp = this->instanceData;
+                this->instanceData = nullptr;
+                delete tmp;
+                std::fstream myFile;
+                myFile.open(input, std::ios::in);
+                this->instanceData = new Session(&myFile);
+            }
+        } else {
+            this->instanceData = new Session(loadFile);
+        }
+        if (this->instanceData->getIfFileInvalid()) {
+            toRePrompt = true;
+        } else {
+            toRePrompt = false;
+        }
+    } while (toRePrompt && !this->quitGame);
+    // this->currentPlayer = this->instanceData->getCurrentPlayer();
     this->scoreThisTurn = 0;
     this->turnFinished = false;
     this->tilesPlacedThisRound = 0;
-    this->quitGame = false;
 }
 
 
@@ -32,7 +57,7 @@ GameEngine::~GameEngine()
 
 void GameEngine::gameController() {
     // If the tilebag returns an error then the players are never initialized, so the current and other Player will be null.
-    if (this->instanceData->getPlayer(1) != NULL && this->instanceData->getPlayer(2) != NULL) {
+    if (this->instanceData->getPlayer(1) != NULL && this->instanceData->getPlayer(2) != NULL && !this->instanceData->getIfFileInvalid()) {
         std::cout << "Let's Play!" << std::endl << std::endl;
         // NOTE: The whole playerOne, playerTwo, getCurrentPlayer is very shoddy and could definitely be refactored.    
         Player* playerOne = this->instanceData->getPlayer(1);
@@ -262,9 +287,31 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
             //After declaration, we write the column names which are less than the board size (length)
             BoardVector* board = instanceData->getBoard();
             //In order to save position on the board (e.g. C1), we do a nested for loop which respectively gives the ascii alphabet and the horizontal position
+            // for (int i = 0; i < BOARD_SIZE; i++) {
+            //     for (int a = 0; a < BOARD_SIZE; a++) {
+            //         save << board->at(i).at(a);
+            //     }
+            // save << std::endl;
+            // }
+
+            save << "   ";
             for (int i = 0; i < BOARD_SIZE; i++) {
+                std::string colHeader = " " + std::to_string(i) + "  ";
+                save << colHeader.substr(0, COL_HEADER_LENGTH);
+            }
+
+            save << std::endl << "  ";
+            for (int i = 0; i < BOARD_SIZE; i++) {
+                save << "----";
+            }
+            save << "-";
+            
+            save << std::endl;
+                //In order to save position on the board (e.g. C1), we do a nested for loop which respectively gives the ascii alphabet and the horizontal position
+            for (int i = 0; i < BOARD_SIZE; i++) {
+                save << char(i + INT_ASCII_OFFSET) << " |";
                 for (int a = 0; a < BOARD_SIZE; a++) {
-                    save << board->at(i).at(a);
+                    save << " " << board->at(i).at(a) << " |";
                 }
             save << std::endl;
             }

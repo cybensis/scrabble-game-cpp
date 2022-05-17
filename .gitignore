@@ -10,3 +10,5 @@ test.h
 GameEngine copy.cpp
 tst.txt
 save.txt
+loadtest.input
+loadtest.save
