@@ -50,7 +50,7 @@ Session::Session(std::fstream* loadFile) {
             }
         }
 
-        for (int i = 0; i < splitInput.size(); i++) {
+        for (int i = 0; i < int(splitInput.size()); i++) {
             int tileScore = std::stoi(splitInput[i].substr(SCORE_INDEX, splitInput[i].size()));
             char tileChar = splitInput[i][CHAR_INDEX];
             Tile tempTile(tileChar, tileScore);
