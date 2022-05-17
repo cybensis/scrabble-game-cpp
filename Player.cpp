@@ -42,7 +42,7 @@ Player::Player(std::string playerName, std::string playerHand, int playerScore) 
         }
     }
 
-    for (int i = 0; i < splitInput.size(); i++) {
+    for (int i = 0; i < int(splitInput.size()); i++) {
         int tileScore = std::stoi(splitInput[i].substr(2, splitInput[i].size()));
         char tileChar = splitInput[i][0];
         Tile tempTile(tileChar, tileScore);
