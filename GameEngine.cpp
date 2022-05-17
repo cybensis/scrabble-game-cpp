@@ -15,6 +15,11 @@ GameEngine::GameEngine()
     }
 }
 
+GameEngine::GameEngine(std::fstream* loadFile) {
+    this->instanceData = new Session(loadFile);
+}
+
+
 GameEngine::~GameEngine()
 {
     delete this->instanceData;

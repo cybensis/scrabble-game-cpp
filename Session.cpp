@@ -11,7 +11,37 @@ Session::Session() {
     return;
 }
 
+Session::Session(std::fstream* loadFile) {
+    if (*loadFile) {
+        std::string playerName;
+        int playerScore; 
+        std::string playerHand;
+        std::string tempString;
+        std::getline(*loadFile, playerName);
+        std::getline(*loadFile, tempString);
+        playerScore = std::stoi(tempString);
+        std::getline(*loadFile, playerHand);
+        this->playerOne = new Player(playerName, playerHand, playerScore);
 
+        std::getline(*loadFile, playerName);
+        std::getline(*loadFile, tempString);
+        playerScore = std::stoi(tempString);
+        std::getline(*loadFile, playerHand);
+        this->playerTwo = new Player(playerName, playerHand, playerScore);
+
+        std::vector<std::string> board;
+        // The board is going to be very difficult to do as you have to do a lot of splitting input, on the "|   |" - Maybe change the save
+        // file so it only prints out the chars, so one row might look like "-------READ----" where "-" are spaces, then you don't have to split
+        // anything
+        // there are 17 lines for the entire board. 
+        for (int i = 0; i < 17; i++) {
+            std::getline(*loadFile, tempString);
+            board.push_back(tempString);
+        }
+        // It will probably crash until this is finished so just exit here
+        exit(1);
+    }
+}
 
 Session::~Session() {
     delete this->tileBag;

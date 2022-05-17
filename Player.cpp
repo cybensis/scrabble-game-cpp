@@ -26,7 +26,14 @@ Player::Player(std::string playerName, LinkedList* tileBag) {
     return;
 }
 
+Player::Player(std::string playerName, std::string playerHand, int playerScore) {
+    this->playerName = playerName;
+    this->playerScore = playerScore;
+    // Generate player hand from string
+    // Maybe split the string on ", " and put each element into a vector, then split again on "-" and that should split up the chars and scores
+    // then just generate the tiles from there
 
+}
 
 Player::~Player() {
     delete this->playerHand;

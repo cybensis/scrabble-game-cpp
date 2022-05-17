@@ -5,6 +5,7 @@
 #include "GameEngine.h"
 #include <string>
 #include <fstream>
+#include <vector>
 //#include <limits>
 //#include <typeinfo>
 
@@ -89,7 +90,9 @@ void loadGame() {
     cout << "Enter the filename from which load a game" << endl;
     string dir = userInput();
     fstream myFile;
-    myFile.open(dir);
+    myFile.open(dir, std::ios::in);
+    GameEngine* gameInstance = new GameEngine(&myFile);
+    gameInstance->gameController();
     if (myFile) {
         /*
         string line;
@@ -98,12 +101,12 @@ void loadGame() {
         }
         */
         int playerName = 0; //used for players 1 and 2
+
         int score = 0; 
         LinkedList* hand;
         if (GotoLine(myFile, 1) << playerName && GotoLine(myFile, 2) << score && GotoLine(myFile, 3) << (char*)&hand 
         && GotoLine(myFile, 4) << playerName && GotoLine(myFile, 5) << score && GotoLine(myFile, 6) << (char*)&hand 
         && GotoLine(myFile, 8) << (char*)&hand && GotoLine(myFile, 9) << playerName) {
-            
             cout << "" << endl;
             cout << "Scrabble game successfully loaded" << endl;
         }

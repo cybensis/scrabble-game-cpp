@@ -16,6 +16,7 @@ class Player {
 public:
 
    Player(std::string playerName, LinkedList* tileBag);
+   Player(std::string playerName, std::string playerHand, int playerScore);
    ~Player();
    void replaceTile(int tileIndex);
    // Fill player's hand only at the beginning of the game

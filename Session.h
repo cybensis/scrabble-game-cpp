@@ -26,6 +26,7 @@ class Session {
 public:
 
    Session();
+   Session(std::fstream* loadFile);
    ~Session();
    bool generateTileBag();
    void generatePlayers();
