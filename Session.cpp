@@ -50,18 +50,30 @@ Session::Session(std::fstream* loadFile) {
             for (int i = 0; i < BOARD_SIZE; i++) {
                 std::getline(*loadFile, tempString);
                 std::stringstream ss(tempString);
-                std::vector<std::string> ftl;
 
+                // Vector that each row will be split into
+                std::vector<std::string> splitRow;
+
+                // Split the row string based on delimiter and
+                // add to vector
                 while(std::getline(ss, tempString, '|')){
-                    ftl.push_back(tempString);
+                    splitRow.push_back(tempString);
                 }
 
-                ftl.erase(ftl.begin());
+                // Discard the first element in vector, which
+                // letter of each row.
+                splitRow.erase(splitRow.begin());
+
+                /* 
+                Vector which will be filled with the middle char
+                of every element, which includes the character
+                and blank spaces
+                */
                 std::vector<char> tempCharVector;
-                for(unsigned int i = 0; i < ftl.size(); i++) {
-                    tempCharVector.push_back(ftl.at(i)[1]);
+                for(unsigned int i = 0; i < splitRow.size(); i++) {
+                    tempCharVector.push_back(splitRow.at(i)[1]);
                 }
-
+                // Add row to the board vector
                 this->board.push_back(tempCharVector);
             }
         }
