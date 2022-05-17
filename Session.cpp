@@ -27,12 +27,29 @@ Session::Session(std::fstream* loadFile) {
         std::getline(*loadFile, playerScore);
         std::getline(*loadFile, playerHand);
         this->playerTwo = new Player(playerName, playerHand, std::stoi(playerScore));
-        std::cout << "Checkpoint test: 1" << std::endl;
+        //std::cout << "Checkpoint test: 1" << std::endl;
         // Get the board by getting each line, then reading through each char one by one
         std::string tempString;
+        std::getline(*loadFile, tempString);
+        std::getline(*loadFile, tempString);
         for (int i = 0; i < BOARD_SIZE; i++) {
             std::getline(*loadFile, tempString);
-            std::cout << i << ". " << tempString << std::endl;
+            std::stringstream ss(tempString);
+            std::vector<std::string> ftl;
+
+        while(std::getline(ss, tempString, '|')){
+            ftl.push_back(tempString);
+        }
+
+        ftl.erase(ftl.begin());
+        std::vector<char> tempCharVector;
+        for(unsigned int i = 0; i < ftl.size(); i++) {
+            tempCharVector.push_back(ftl.at(i)[1]);
+        }
+
+        this->board.push_back(tempCharVector);
+
+            //std::cout << i << ". " << tempString << std::endl;
             // std::vector<char> tempVector;
             // for (int a = 0; a < BOARD_SIZE; a++) {
             //     tempVector.push_back(tempString[a]);
@@ -41,28 +58,32 @@ Session::Session(std::fstream* loadFile) {
         }
         // // Get the tilebag by splitting input on "," then by getting substrings of the split strings, it gets
         // // the score and tile char
-        // this->tileBag = new LinkedList();
-        // std::getline(*loadFile, tempString);
-        // std::stringstream inputStream(tempString); 
-        // std::vector<std::string> splitInput; 
-        // if (!inputStream.str().empty()) {
-        //     while (std::getline(inputStream, tempString, ',')) { 
-        //         if (tempString.length() > 0) { splitInput.push_back(tempString); }
-        //     }
-        // }
+        this->tileBag = new LinkedList();
+        std::string tileBagString;
+        std::getline(*loadFile, tileBagString);
+        std::stringstream inputStream(tileBagString); 
+        std::vector<std::string> splitTileBagString;
 
-        // for (int i = 0; i < int(splitInput.size()); i++) {
-        //     int tileScore = std::stoi(splitInput[i].substr(SCORE_INDEX, splitInput[i].size()));
-        //     char tileChar = splitInput[i][CHAR_INDEX];
-        //     Tile tempTile(tileChar, tileScore);
-        //     this->tileBag->addBack(&tempTile);
-        // }
+        std::string tileString;
 
-        // this->playerOne->setTileBag(this->tileBag);
-        // this->playerTwo->setTileBag(this->tileBag);
-        // std::string currentPlayer;
-        // std::getline(*loadFile, currentPlayer);
-        // this->playerOnesTurn = (currentPlayer == this->playerOne->getName()) ? true : false;
+        if (!inputStream.str().empty()) {
+            while (std::getline(inputStream, tileString, ',')) { 
+                if (tileString.length() > 0) { splitTileBagString.push_back(tileString); }
+            }
+        }
+
+        for (int i = 0; i < int(splitTileBagString.size()); i++) {
+            int tileScore = std::stoi(splitTileBagString[i].substr(SCORE_INDEX, splitTileBagString[i].size()));
+            char tileChar = splitTileBagString[i][CHAR_INDEX];
+            Tile tempTile(tileChar, tileScore);
+            this->tileBag->addBack(&tempTile);
+        }
+
+        this->playerOne->setTileBag(this->tileBag);
+        this->playerTwo->setTileBag(this->tileBag);
+        std::string currentPlayer;
+        std::getline(*loadFile, currentPlayer);
+        this->playerOnesTurn = (currentPlayer == this->playerOne->getName()) ? true : false;
         std::cout << "Scrabble game successfully loaded" << std::endl;
 
     } else {

@@ -42,7 +42,7 @@ GameEngine::GameEngine(std::fstream* loadFile) {
             toRePrompt = false;
         }
     } while (toRePrompt && !this->quitGame);
-    // this->currentPlayer = this->instanceData->getCurrentPlayer();
+    this->currentPlayer = this->instanceData->getCurrentPlayer();
     this->scoreThisTurn = 0;
     this->turnFinished = false;
     this->tilesPlacedThisRound = 0;
