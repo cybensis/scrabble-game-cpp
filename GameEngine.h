@@ -31,12 +31,14 @@
 #define BINGO_POINTS            50
 #include "Session.h"
 #include <sstream>
+#include <fstream>
 
 
 class GameEngine {
 public:
 
    GameEngine();
+   GameEngine(std::fstream* loadFile);
    ~GameEngine();
 
     // inputController is what controls the entire flow of the game (not including menu)
@@ -58,7 +60,6 @@ public:
 private:
     Session* instanceData;
     int scoreThisTurn;
-    bool playerOnesTurn;
     Player* currentPlayer;
     bool turnFinished;
     int tilesPlacedThisRound;

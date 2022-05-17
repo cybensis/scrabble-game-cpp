@@ -8,12 +8,46 @@ GameEngine::GameEngine()
         this->instanceData->generatePlayers();
         this->currentPlayer = this->instanceData->getCurrentPlayer();
         this->scoreThisTurn = 0;
-        this->playerOnesTurn = true;
         this->turnFinished = false;
         this->tilesPlacedThisRound = 0;
         this->quitGame = false;
     }
 }
+
+GameEngine::GameEngine(std::fstream* loadFile) {
+    this->quitGame = false;
+    bool toRePrompt = false;
+    do {
+        if (toRePrompt) {
+            std::cout << "> ";
+            std::string input;
+            getline(std::cin, input);
+            if (std::cin.eof() || input == "^D") {
+                std::cout << std::endl << std::endl;
+                this->quitGame = true;
+            } else {
+                Session* tmp = this->instanceData;
+                this->instanceData = nullptr;
+                delete tmp;
+                std::fstream myFile;
+                myFile.open(input, std::ios::in);
+                this->instanceData = new Session(&myFile);
+            }
+        } else {
+            this->instanceData = new Session(loadFile);
+        }
+        if (this->instanceData->getIfFileInvalid()) {
+            toRePrompt = true;
+        } else {
+            toRePrompt = false;
+        }
+    } while (toRePrompt && !this->quitGame);
+    this->currentPlayer = this->instanceData->getCurrentPlayer();
+    this->scoreThisTurn = 0;
+    this->turnFinished = false;
+    this->tilesPlacedThisRound = 0;
+}
+
 
 GameEngine::~GameEngine()
 {
@@ -23,7 +57,7 @@ GameEngine::~GameEngine()
 
 void GameEngine::gameController() {
     // If the tilebag returns an error then the players are never initialized, so the current and other Player will be null.
-    if (this->instanceData->getPlayer(1) != NULL && this->instanceData->getPlayer(2) != NULL) {
+    if (this->instanceData->getPlayer(1) != NULL && this->instanceData->getPlayer(2) != NULL && !this->instanceData->getIfFileInvalid()) {
         std::cout << "Let's Play!" << std::endl << std::endl;
         // NOTE: The whole playerOne, playerTwo, getCurrentPlayer is very shoddy and could definitely be refactored.    
         Player* playerOne = this->instanceData->getPlayer(1);
@@ -236,38 +270,30 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
                 std::string fileName = splitInput.at(1);
                 std::ofstream save;
                 save.open(fileName);
-                //the file reads the player 1 hand
-                //and then read the name and score and save them 
-                LinkedList* hand = instanceData->getPlayer(1)->getHand();
-                save << instanceData->getPlayer(1)->getName() << '\n';
-                save << instanceData->getPlayer(1)->getScore() << '\n';
-                //in order to get the elements of the hand (tiles), we do an iteration through the whole vector
-                for (int i = 0; i < hand->size(); i++ ) {
-                    Tile* curTile = hand->get(i)->tile;
-                    if (i != (MAX_TILES_IN_HAND - 1)) {
-                        save << curTile->letter << "-" << curTile->value << ", ";
-                    }
-                    else {
-                        save << curTile->letter << "-" << curTile->value << '\n';
-                    }
-                }
-                //we do the same process as above for player 2
-                hand = instanceData->getPlayer(2)->getHand();
-                save << instanceData->getPlayer(2)->getName() << '\n';
-                save << instanceData->getPlayer(2)->getScore() << '\n';
-
-                for (int i = 0; i < hand->size(); i++ ) {
-                    Tile* curTile = hand->get(i)->tile;
-                    if (i != (MAX_TILES_IN_HAND - 1)) {
-                        save << curTile->letter << "-" << curTile->value << ", ";
-                    }
-                    else {
-                        save << curTile->letter << "-" << curTile->value << '\n';
+                LinkedList* hand;
+                // Read the 2 players data and add it to the save file
+                for (int a = 1; a <= 2; a++) {
+                    hand = instanceData->getPlayer(a)->getHand();
+                    save << instanceData->getPlayer(a)->getName() << '\n';
+                    save << instanceData->getPlayer(a)->getScore() << '\n';
+                    //in order to get the elements of the hand (tiles), we do an iteration through the whole vector
+                    for (int i = 0; i < hand->size(); i++ ) {
+                        Tile* curTile = hand->get(i)->tile;
+                        if (i != (MAX_TILES_IN_HAND - 1)) { save << curTile->letter << "-" << curTile->value << ","; }
+                        else { save << curTile->letter << "-" << curTile->value << '\n'; }
                     }
                 }
             //We need to construct the board in the file
             //After declaration, we write the column names which are less than the board size (length)
             BoardVector* board = instanceData->getBoard();
+            //In order to save position on the board (e.g. C1), we do a nested for loop which respectively gives the ascii alphabet and the horizontal position
+            // for (int i = 0; i < BOARD_SIZE; i++) {
+            //     for (int a = 0; a < BOARD_SIZE; a++) {
+            //         save << board->at(i).at(a);
+            //     }
+            // save << std::endl;
+            // }
+
             save << "   ";
             for (int i = 0; i < BOARD_SIZE; i++) {
                 std::string colHeader = " " + std::to_string(i) + "  ";
@@ -295,7 +321,7 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
             for (int i = 0; i < tileBag->size(); i++ ) {
                 Tile* curTile = tileBag->get(i)->tile;
                 if (i != (tileBag->size() - 1)) {
-                    save << curTile->letter << "-" << curTile->value << ", ";
+                    save << curTile->letter << "-" << curTile->value << ",";
                 }
                 else {
                     save << curTile->letter << "-" << curTile->value << '\n';

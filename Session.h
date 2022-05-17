@@ -8,6 +8,12 @@
 // 0, then a space at index 1 which we ignore, and score follows immediately after at index 2.
 #define CHAR_INDEX           0
 #define SCORE_INDEX          2
+#define TILE_REGEX           "^[A-Z]-(\\d|10)$"
+#define COMMA_SPLIT_REGEX    ","
+#define MAX_TILES_IN_HAND    7
+#define MAX_TILES_IN_BAG     98
+#define CAPS_ONLY_REGEX      "^([A-Z])*$"
+#define DIGIT_ONLY_REGEX     "^\\d$"
 
 #include "Node.h"
 #include "LinkedList.h"
@@ -16,8 +22,10 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <sstream>  
+#include <cstring>
+#include <regex>
 #include <algorithm>
-// using namespace std;
 
 typedef std::vector<std::vector<char>> BoardVector;
 //Maybe make a type def for coordinate pairs
@@ -26,7 +34,9 @@ class Session {
 public:
 
    Session();
+   Session(std::fstream* loadFile);
    ~Session();
+   bool getIfFileInvalid();
    bool generateTileBag();
    void generatePlayers();
    // Used to get the object of the current player. This saves time instead of having to do if else statements everytime.
@@ -50,6 +60,9 @@ private:
    // This initialises the 2D board vector as a 15x15 array, and all spaces are initialised with a single whitespace
    BoardVector board;
    bool playerOnesTurn;
+   bool invalidFile;
+   bool isTileListValid(std::string tiles, int maxSize);
+   void ltrim(std::string &s);
 
    
 };

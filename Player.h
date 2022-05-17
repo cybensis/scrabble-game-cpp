@@ -11,12 +11,16 @@
 #include <random>
 #include <iostream>
 #include <algorithm>
+#include <vector>
+#include <sstream>
 
 class Player {
 public:
 
    Player(std::string playerName, LinkedList* tileBag);
+   Player(std::string playerName, std::string playerHand, int playerScore);
    ~Player();
+   void setTileBag(LinkedList* tileBagPtr);
    void replaceTile(int tileIndex);
    // Fill player's hand only at the beginning of the game
    void fillHand();
