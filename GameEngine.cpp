@@ -245,10 +245,9 @@ bool GameEngine::validInput(std::string* input, std::vector<int>* queueHandIndex
                 std::string fileName = splitInput.at(1);
                 std::ofstream save;
                 save.open(fileName);
-                //the file reads the player 1 hand
-                //and then read the name and score and save them 
                 LinkedList* hand;
-                for (int a = 0; a < 2; a++) {
+                // Read the 2 players data and add it to the save file
+                for (int a = 1; a <= 2; a++) {
                     hand = instanceData->getPlayer(a)->getHand();
                     save << instanceData->getPlayer(a)->getName() << '\n';
                     save << instanceData->getPlayer(a)->getScore() << '\n';
