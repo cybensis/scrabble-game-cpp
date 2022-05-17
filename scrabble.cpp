@@ -26,6 +26,7 @@ void newGame();
 void loadGame();
 void credits();
 std::fstream& GotoLine(std::fstream& file, unsigned int num);
+bool validation(std::fstream myFile);
 string userInput();
 
 int main(void) {
@@ -154,4 +155,12 @@ string userInput() {
         exit(EXIT_SUCCESS);
     }
     return input;
+}
+
+bool validation(fstream myFile) {
+    Session* instanceData;
+    if (GotoLine(myFile, 1).read((char*)&(instanceData->getPlayer(1)->getName()), sizeof(instanceData->getPlayer(1)->getName()))) {
+        return true;
+    }
+    return false;
 }
