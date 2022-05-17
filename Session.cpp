@@ -21,11 +21,20 @@ Session::Session(std::fstream* loadFile) {
         std::getline(*loadFile, playerName);
         std::getline(*loadFile, playerScore);
         std::getline(*loadFile, playerHand);
-        this->playerOne = new Player(playerName, playerHand, std::stoi(playerScore));
-
+        if (playerName.length() > 0 && regex_match(playerName, std::regex(CAPS_ONLY_REGEX)) && regex_match(playerScore, std::regex(DIGIT_ONLY_REGEX)) 
+        && playerScore.length() > 0 && isTileListValid(playerHand, MAX_TILES_IN_HAND)) {
+            std::cout << "Player 1 valid" << std::endl;
+            this->playerOne = new Player(playerName, playerHand, std::stoi(playerScore));
+        } else {
+            this->invalidFile = true;
+        }
+        playerName = "";
+        playerScore = "";
+        playerHand = "";
         std::getline(*loadFile, playerName);
         std::getline(*loadFile, playerScore);
         std::getline(*loadFile, playerHand);
+<<<<<<< HEAD
         this->playerTwo = new Player(playerName, playerHand, std::stoi(playerScore));
         //std::cout << "Checkpoint test: 1" << std::endl;
         // Get the board by getting each line, then reading through each char one by one
@@ -55,9 +64,29 @@ Session::Session(std::fstream* loadFile) {
             //     tempVector.push_back(tempString[a]);
             // }
             // this->board.push_back(tempVector);
+=======
+        if (!this->invalidFile && playerName.length() > 0 && regex_match(playerName, std::regex(CAPS_ONLY_REGEX)) 
+        && regex_match(playerScore, std::regex(DIGIT_ONLY_REGEX)) && playerScore.length() > 0 && isTileListValid(playerHand, MAX_TILES_IN_HAND)) {
+            std::cout << "Player 2 valid" << std::endl;
+            this->playerTwo = new Player(playerName, playerHand, std::stoi(playerScore));
+        } else {
+            this->invalidFile = true;
+>>>>>>> b78ebcae6f0dfa112c37b50b0472d47e6d0fb979
         }
+        // // Get the board by getting each line, then reading through each char one by one
+        // std::string tempString;
+        // for (int i = 0; i < BOARD_SIZE; i++) {
+        //     std::getline(*loadFile, tempString);
+        //     std::cout << i << ". " << tempString << std::endl;
+        //     // std::vector<char> tempVector;
+        //     // for (int a = 0; a < BOARD_SIZE; a++) {
+        //     //     tempVector.push_back(tempString[a]);
+        //     // }
+        //     // this->board.push_back(tempVector);
+        // }
         // // Get the tilebag by splitting input on "," then by getting substrings of the split strings, it gets
         // // the score and tile char
+<<<<<<< HEAD
         this->tileBag = new LinkedList();
         std::string tileBagString;
         std::getline(*loadFile, tileBagString);
@@ -85,6 +114,33 @@ Session::Session(std::fstream* loadFile) {
         std::getline(*loadFile, currentPlayer);
         this->playerOnesTurn = (currentPlayer == this->playerOne->getName()) ? true : false;
         std::cout << "Scrabble game successfully loaded" << std::endl;
+=======
+        // this->tileBag = new LinkedList();
+        // std::getline(*loadFile, tempString);
+        // std::stringstream inputStream(tempString); 
+        // std::vector<std::string> splitInput; 
+        // if (!inputStream.str().empty()) {
+        //     while (std::getline(inputStream, tempString, ',')) { 
+        //         if (tempString.length() > 0) { splitInput.push_back(tempString); }
+        //     }
+        // }
+
+        // for (int i = 0; i < int(splitInput.size()); i++) {
+        //     int tileScore = std::stoi(splitInput[i].substr(SCORE_INDEX, splitInput[i].size()));
+        //     char tileChar = splitInput[i][CHAR_INDEX];
+        //     Tile tempTile(tileChar, tileScore);
+        //     this->tileBag->addBack(&tempTile);
+        // }
+
+        // this->playerOne->setTileBag(this->tileBag);
+        // this->playerTwo->setTileBag(this->tileBag);
+        // std::string currentPlayer;
+        // std::getline(*loadFile, currentPlayer);
+        // this->playerOnesTurn = (currentPlayer == this->playerOne->getName()) ? true : false;
+        if (!this->invalidFile) {
+            std::cout << "Scrabble game successfully loaded" << std::endl;
+        }
+>>>>>>> b78ebcae6f0dfa112c37b50b0472d47e6d0fb979
 
     } else {
         this->invalidFile = true;
@@ -99,7 +155,39 @@ bool Session::getIfFileInvalid() {
     return this->invalidFile;
 }
 
+bool Session::isTileListValid(std::string tiles, int maxSize) {
+    bool isValid = true;
+    if (tiles.length() > 0) {
+        int lengthHand = 0;
+        // Modified Split by regex code from https://stackoverflow.com/questions/16749069/c-split-string-by-regex
+        std::regex rgx(COMMA_SPLIT_REGEX);
+        std::sregex_token_iterator iter(tiles.begin(), tiles.end(), rgx, -1);
+        std::sregex_token_iterator end;
+        while (iter != end && lengthHand <= maxSize && isValid) {
+            std::string tile = *iter;
+            ltrim(tile);
+            if (lengthHand < maxSize) {
+                std::cout << tile << std::endl;
+                if (!regex_match(tile, std::regex(TILE_REGEX))) { // Checks if current tile is <letter>-<number> format
+                    isValid = false;
+                } 
+            } else {
+                isValid = false;
+            }
+            iter++;
+            lengthHand++;
+        }
+    }
+    return isValid;
+}
 
+// Code from https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring
+// trim from start (in place)
+void Session::ltrim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }));
+}
 
 Session::~Session() {
     delete this->tileBag;
@@ -148,13 +236,13 @@ bool Session::generateTileBag() {
 
 
 void Session::generatePlayers() {
-    bool inputtingUsernames = true;
+    bool assigningUsernames = true;
     bool invalidInput = false;
-    int currentUser = 1;
-    while (inputtingUsernames) {
+    int currentUserIdx = 1;
+    while (assigningUsernames) {
         std::string userInput;
         if (!invalidInput) {
-            std::cout << "Enter a name for player " + std::to_string(currentUser) +" (uppercase characters only)" << std::endl << "> "; 
+            std::cout << "Enter a name for player " + std::to_string(currentUserIdx) +" (uppercase characters only)" << std::endl << "> "; 
         } else {
             std::cout << "> ";
         }
@@ -164,17 +252,17 @@ void Session::generatePlayers() {
         // This will check if all characters in a string are uppercase characters AND if they are only valid chars (A-Z)
         if (std::cin.eof() || userInput == "^D") {
             std::cout << std::endl; 
-            inputtingUsernames = false;
+            assigningUsernames = false;
         } else if (std::all_of(userInput.begin(), userInput.end(), [](unsigned char c){ return std::isupper(c); }) && userInput.length() > 0) { 
-            // If the currentUser is 1 then create the first player object and add to currentUser, otherwise
+            // If the currentUserIdx is 1 then create the first player object and add to currentUserIdx, otherwise
             // create playerTwo and end the loop
-            if (currentUser == 1) {
+            if (currentUserIdx == 1) {
                 this->playerOne = new Player(userInput, this->tileBag);
-                currentUser += 1;
+                currentUserIdx += 1;
             }
             else if (this->playerOne->getName() != userInput) {
                 this->playerTwo = new Player(userInput, this->tileBag);
-                inputtingUsernames = false;
+                assigningUsernames = false;
             }
             // Adding an empty line after each input
             std::cout << std::endl;
